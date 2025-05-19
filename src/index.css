@@ -1,0 +1,93 @@
+@tailwind utilities;
+@layer utilities {
+  :root {
+    /* Notes related variables */
+    /* --> Common */
+    --onb-note-background-active: #e5e7eb;
+    --onb-note-text-title-size: 14px;
+    --onb-note-text-description-size: 12px;
+    --onb-note-text-description-color: #808080;
+    --onb-note-text-date-color: #272727;
+
+    /* --> Grid View*/
+    --onb-note-grid-width: 365px;
+    --onb-note-grid-height: 300px;
+    --onb-note-grid-border-color: #eaeaea;
+    --onb-note-grid-thumbnail-height: 148px;
+
+    /* Divider related variables */
+    --onb-divider-background: #e6e6e6;
+    --onb-divider-padding-x: 30px;
+    --onb-divider-height: 1px;
+
+    /* Folder related variables */
+    --onb-folder-background-active: #6aa0f9;
+    --onb-folder-focused-background: #d4d4d4;
+    --onb-folder-focused-text-color: #000000;
+    --onb-folder-background-hover: #c7c6ca;
+    --onb-folder-text-size: 14px;
+    --onb-folder-text-color: #9f9ea4;
+    --onb-folder-icon-color: #006ef6;
+
+    /*Filesystem related variables*/
+    --onb-filesystem-background-color: #e6e5e8;
+
+    /* Scrollbar variables*/
+    /*  --scrolbar: #e0dee4; */
+    --scrollbar-thumb: #afaeb2;
+    --scrollbar-thumb-hover: #727174;
+    --scrollbar-files: #fafafa;
+    --scrollbar-files-thumb: #c2c2c2;
+    --scrollbar-files-thumb-hover: #7d7d7d;
+
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    background-color: var(--onb-filesystem-background-color) !important;
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb) !important;
+    border-radius: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover) !important;
+  }
+
+  .Resizer {
+    width: 10px;
+    background: #000;
+    opacity: 0.2;
+    z-index: 100;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+  }
+
+  .Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+  }
+
+  .Resizer.vertical {
+    width: 11px;
+    z-index: 100;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+  }
+
+  .Resizer.disabled {
+    cursor: not-allowed;
+  }
+
+  .Resizer.disabled:hover {
+    border-color: transparent;
+  }
+}

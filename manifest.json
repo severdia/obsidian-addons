@@ -1,0 +1,11 @@
+{
+	"id": "obsidian-notes-browser",
+	"name": "Obsidian Notes Browser",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "This plugin will allows you to navigate your files in the same way Apple Notes does.",
+	"author": "Obsidian",
+	"authorUrl": "https://obsidian.md",
+	"fundingUrl": "https://obsidian.md/pricing",
+	"isDesktopOnly": true
+}
