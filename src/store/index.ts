@@ -54,7 +54,6 @@ export const useStore = create<State>()((set) => ({
     }),
   setCurrentActiveFolderPath: (path: string | null, options) =>
     set((state) => {
-      console.log("run setCurrentActiveFolderPath");
       if (!path || !state.app) return state;
       else if (options?.isTrashFolder)
         return { ...state, currentActiveFolderPath: path, notes: [] };

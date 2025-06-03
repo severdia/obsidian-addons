@@ -1,5 +1,6 @@
 import { Note } from "components/Note";
 import { TFile } from "obsidian";
+import { useEffect } from "react";
 import { AutoSizer, List, ListRowProps } from "react-virtualized";
 
 export const ListView = ({ notes }: { notes: TFile[] }) => {
@@ -13,6 +14,7 @@ export const ListView = ({ notes }: { notes: TFile[] }) => {
       <Note file={notes[props.index]} isFirst={props.index === 0} />
     </div>
   );
+
 
   return (
     <AutoSizer>

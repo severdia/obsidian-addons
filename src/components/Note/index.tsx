@@ -4,12 +4,16 @@ import {
   RenameModal,
 } from "components/CustomModals";
 import { useApp, useDragHandlers, usePlugin } from "hooks";
-import { Menu, TFile } from "obsidian";
+import { Menu, normalizePath, Notice, TFile } from "obsidian";
 import { memo, useCallback, useEffect, useState } from "react";
 import { useStore } from "store";
 import { extractImageLink, getLastModified } from "utils";
 import { NoteListView } from "./NoteListView";
 import { NoteGridView } from "./NoteGridView";
+import { TRASH_ROOT } from "components/TreeView/TrashFolder/constant";
+import * as nodePath from "path";
+
+const isNodeAvailable = typeof nodePath?.basename === "function";
 
 interface CustomTFile extends TFile {
   deleted?: boolean;
@@ -30,11 +34,15 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
     notesViewType,
     setIsFolderFocused,
     isFolderFocused,
+    setCurrentActiveFilePath,
+    setCurrentActiveFolderPath,
   } = useStore((state) => ({
     forceNotesViewUpdate: state.forceNotesViewUpdate,
     notesViewType: state.notesViewType,
     setIsFolderFocused: state.setIsFolderFocused,
     isFolderFocused: state.isFolderFocused,
+    setCurrentActiveFilePath: state.setCurrentActiveFilePath,
+    setCurrentActiveFolderPath: state.setCurrentActiveFolderPath,
   }));
 
   const { settings } = usePlugin();
@@ -100,7 +108,9 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
       }
 
       const content = await app.vault.cachedRead(file);
-      updateContent(content);
+      const mainContent = content.replace(/^([ \t]*)---[\s\S]*?---\n?/m, "$1");
+
+      updateContent(mainContent);
     };
 
     getContent();
@@ -155,12 +165,64 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
     renameFileModal.open();
   }, []);
 
+  const handleDuplicate = useCallback(async () => {
+    if (!app) return;
+    try {
+      const duplicateNoteName = `${file.basename}(copy).${file.extension}`;
+      const duplicatedNotePath = `${file.parent!.path}/${duplicateNoteName}`;
+      await app.vault.copy(file as TFile, duplicatedNotePath);
+    } catch (e) {
+      new Notice(e);
+    }
+  }, []);
+
+  const restoreFromTrash = useCallback(async () => {
+    const restorePath = normalizePath(file.path.replace(`${TRASH_ROOT}/`, ""));
+
+    if (await app.vault.adapter.exists(restorePath)) {
+      return false;
+    }
+
+    const dirname = isNodeAvailable
+      ? nodePath.dirname
+      : (path: string) => path.match(/^(.+)\/.+/)?.at(1) || ".";
+    const restoreParentDir = dirname(restorePath);
+
+    if (!(await app.vault.adapter.exists(restoreParentDir))) {
+      await app.vault.adapter.mkdir(restoreParentDir);
+    }
+
+    await app.vault.adapter.rename(file.path, restorePath);
+
+    return true;
+  }, []);
+
   const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!app) return;
     const fileMenu = new Menu();
-    const fileToTrigger = app.vault.getAbstractFileByPath(file.path);
+
+    if (file.path.startsWith(".trash")) {
+      console.log("delted fles :)");
+      fileMenu.addItem((menuItem) => {
+        menuItem.setTitle("Restore Note");
+        menuItem.setIcon("undo-2");
+        menuItem.onClick(restoreFromTrash);
+      });
+
+      app.workspace.trigger("file-menu", fileMenu, file, "file-explorer");
+
+      fileMenu.showAtPosition({ x: e.pageX, y: e.pageY });
+      return;
+    }
+    const fileToTrigger = app.vault.getAbstractFileByPath(file.parent!.path);
 
     if (!fileToTrigger) return;
+
+    fileMenu.addItem((menuItem) => {
+      menuItem.setTitle("Duplicate Note");
+      menuItem.setIcon("copy");
+      menuItem.onClick(handleDuplicate);
+    });
 
     fileMenu.addItem((menuItem) => {
       menuItem.setTitle("Delete");

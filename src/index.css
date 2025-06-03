@@ -17,7 +17,7 @@
 
     /* Divider related variables */
     --onb-divider-background: #e6e6e6;
-    --onb-divider-padding-x: 30px;
+    --onb-divider-padding-x: 12px;
     --onb-divider-height: 1px;
 
     /* Folder related variables */
@@ -26,7 +26,7 @@
     --onb-folder-focused-text-color: #000000;
     --onb-folder-background-hover: #c7c6ca;
     --onb-folder-text-size: 14px;
-    --onb-folder-text-color: #9f9ea4;
+    --onb-folder-text-color: #9f9ea4; 
     --onb-folder-icon-color: #006ef6;
 
     /*Filesystem related variables*/

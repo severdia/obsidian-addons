@@ -1,22 +1,26 @@
 import { useStore } from "store";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { NotesViewToolbar } from "./NotesViewToolbar";
 import { GalleryView } from "./GalleryView";
 import { ListView } from "./ListView";
 
 export function NotesView() {
-  const { files, notesViewType } = useStore((state) => ({
+  const { files, notesViewType, forceNotesViewUpdate } = useStore((state) => ({
     files: state.notes,
     notesViewType: state.notesViewType,
+    forceNotesViewUpdate: state.forceNotesViewUpdate,
   }));
 
-  const notes = useMemo(
-    () =>
-      files
-        .filter((file) => file.extension == "md")
-        .sort((a, b) => a.name.localeCompare(b.name)),
-    [files]
-  );
+  useEffect(() => {
+    console.log("rendered notes view - useEffect");
+  }, [forceNotesViewUpdate]);
+
+  const notes = useMemo(() => {
+    console.log("recomputed files");
+    return files
+      .filter((file) => file.extension == "md")
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [files, forceNotesViewUpdate]);
 
   return (
     <div className="onb-flex onb-flex-col onb-bg-white onb-h-full onb-w-full  onb-flex-grow">

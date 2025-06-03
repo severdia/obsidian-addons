@@ -103,6 +103,14 @@
     height: 100%;
 
 }
+.onb-max-h-0 {
+    max-height: 0px;
+
+}
+.onb-max-h-\[1000px\] {
+    max-height: 1000px;
+
+}
 .onb-min-h-6 {
     min-height: 1.5rem;
 
@@ -152,6 +160,20 @@
 }
 .onb-flex-grow {
     flex-grow: 1;
+
+}
+.-onb-translate-y-2 {
+    --tw-translate-y: -0.5rem;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+
+}
+.onb-translate-y-0 {
+    --tw-translate-y: 0px;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+
+}
+.onb-transform {
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 
 }
 .onb-cursor-not-allowed {
@@ -214,6 +236,10 @@
 }
 .onb-gap-7 {
     gap: 1.75rem;
+
+}
+.onb-overflow-hidden {
+    overflow: hidden;
 
 }
 .onb-overflow-visible {
@@ -513,6 +539,20 @@
     color: rgb(255 255 255 / var(--tw-text-opacity));
 
 }
+.onb-transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+
+}
+.onb-duration-\[1000ms\] {
+    transition-duration: 1000ms;
+
+}
+.onb-ease-in-out {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+}
   :root {
     /* Notes related variables */
     /* --> Common */
@@ -530,7 +570,7 @@
 
     /* Divider related variables */
     --onb-divider-background: #e6e6e6;
-    --onb-divider-padding-x: 30px;
+    --onb-divider-padding-x: 12px;
     --onb-divider-height: 1px;
 
     /* Folder related variables */
@@ -539,7 +579,7 @@
     --onb-folder-focused-text-color: #000000;
     --onb-folder-background-hover: #c7c6ca;
     --onb-folder-text-size: 14px;
-    --onb-folder-text-color: #9f9ea4;
+    --onb-folder-text-color: #9f9ea4; 
     --onb-folder-icon-color: #006ef6;
 
     /*Filesystem related variables*/

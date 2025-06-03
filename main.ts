@@ -6,11 +6,13 @@ import { SettingTab } from "./SettingTab";
 interface NotesBrowserSettings {
   isDraggingFilesAndFoldersdisabled: boolean;
   hideAttachmentFolder: boolean;
+  hideVaultFolder: boolean;
 }
 
 const DEFAULT_SETTINGS: NotesBrowserSettings = {
   isDraggingFilesAndFoldersdisabled: false,
   hideAttachmentFolder: false,
+  hideVaultFolder: false,
 };
 
 export default class NotesBrowser extends Plugin {
@@ -43,8 +45,10 @@ export default class NotesBrowser extends Plugin {
   }
 
   updateNotesView = () => {
-    const { setForceFilesystemUpdate } = useStore.getState();
+    const { setForceFilesystemUpdate, setForceNotesViewUpdate } =
+      useStore.getState();
     setForceFilesystemUpdate();
+    setForceNotesViewUpdate();
   };
 
   onDelete = () => {

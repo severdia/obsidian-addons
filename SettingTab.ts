@@ -16,6 +16,30 @@ export class SettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
+      .setName("Donate")
+      .setDesc(
+        "If you like this Plugin, consider donating to support continued development:"
+      )
+      .addButton((bt) => {
+        bt.buttonEl.outerHTML = `
+        <a href="https://www.buymeacoffee.com/severdia" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+        <script 
+          type="text/javascript" 
+          src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
+          data-name="bmc-button" 
+          data-slug="severdia" 
+          data-color="#FF5F5F" 
+          data-emoji=""  
+          data-font="Cookie" 
+          data-text="Buy me a coffee" 
+          data-outline-color="#000000" 
+          data-font-color="#ffffff" 
+          data-coffee-color="#FFDD00">
+        </script>
+        `;
+      });
+
+    new Setting(containerEl)
       .setName("Disable dragging folders and files")
       .addToggle((toggleComp) => {
         toggleComp.setValue(
@@ -29,11 +53,27 @@ export class SettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Hide attachment folders")
-      .setDesc("This setting hides all folders with the name you set in the Files & Links setting.")
+      .setDesc(
+        "This setting hides all folders with the name you set in the Files & Links setting."
+      )
       .addToggle((toggleComp) => {
         toggleComp.setValue(this.plugin.settings.hideAttachmentFolder);
         toggleComp.onChange(async (value: boolean) => {
           this.plugin.settings.hideAttachmentFolder = value;
+          this.updateSettings();
+        });
+      });
+
+
+    new Setting(containerEl)
+      .setName("Hide vault name")
+      .setDesc(
+        "This setting hides vault name from the file explorer."
+      )
+      .addToggle((toggleComp) => {
+        toggleComp.setValue(this.plugin.settings.hideVaultFolder);
+        toggleComp.onChange(async (value: boolean) => {
+          this.plugin.settings.hideVaultFolder = value;
           this.updateSettings();
         });
       });

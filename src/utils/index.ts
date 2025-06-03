@@ -1,8 +1,8 @@
 import { useObsidianConfig, usePlugin } from "hooks";
 import { TAbstractFile, TFile, TFolder } from "obsidian";
 
-export { PluginContext } from "./PluginContext";
-export { AppContext } from "./AppContext";
+export { PluginContext } from "./pluginContext";
+export { AppContext } from "./appContext";
 export { ObsidianConfigContext } from "./ObsidianConfigContext";
 
 export function isContainFolders(folder: TFolder) {

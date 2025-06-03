@@ -4,7 +4,7 @@
 	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
 	"main": "main.js",
 	"scripts": {
-		"dev": "vite build --watch",
+		"dev": "vite --config vite.dev.config.mjs build",
 		"build": "vite --config vite.prod.config.mjs build",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},

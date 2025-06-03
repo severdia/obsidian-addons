@@ -5,10 +5,11 @@ import {
   RenameModal,
 } from "components/CustomModals";
 import { BaseModal } from "components/CustomModals/BaseModal";
+import { ReplaceNoteModal } from "components/CustomModals/ReplaceNoteModal";
 import { Chevron } from "components/Icons/Chevron";
 import { FolderOutline } from "components/Icons/FolderOutline";
 import { useApp, useDragHandlers, useObsidianConfig, usePlugin } from "hooks";
-import { TFolder, Notice, Menu } from "obsidian";
+import { TFolder, Notice, Menu, TFile, normalizePath } from "obsidian";
 import { useState, DragEventHandler, memo } from "react";
 import Dropzone from "react-dropzone";
 
@@ -35,8 +36,11 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
 
   const isAttachmentFolder = props.folder.name === attachementFolderName;
 
-  const currentActiveFolderPath = useStore(
-    (state) => state.currentActiveFolderPath
+  const { currentActiveFolderPath, setCurrentActiveFolderPath } = useStore(
+    (state) => ({
+      currentActiveFolderPath: state.currentActiveFolderPath,
+      setCurrentActiveFolderPath: state.setCurrentActiveFolderPath,
+    })
   );
 
   const isFolderFocused = useStore((state) => state.isFolderFocused);
@@ -84,23 +88,46 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
     dropEvent.dataTransfer.clearData();
 
     if (data === "") return;
-
     const { type, path } = JSON.parse(data);
     const abstractFilePath = app.vault.getAbstractFileByPath(path);
+
     if (!abstractFilePath) {
       if (currentActiveFolderPath === ".trash") {
         restoreFileOrFolder(path);
       }
       return;
     }
+
+
     switch (type) {
       case "file":
+        console.log("abstract folder path : "+abstractFilePath.parent!.path)
         app.vault
           .rename(
             abstractFilePath,
             `${props.folder.path}/${abstractFilePath.name}`
           )
-          .catch((e) => new Notice(`${e}`));
+          .then(() => setCurrentActiveFolderPath(abstractFilePath.parent!.path))
+          .catch(async (e) => {
+            const isFileAlreadyExist = await app.vault.adapter.exists(
+              normalizePath(`${props.folder.path}/${abstractFilePath.name}`)
+            );
+
+            if (isFileAlreadyExist) {
+              const confirmation = new BaseModal(app, () => (
+                <ReplaceNoteModal
+                  modal={confirmation}
+                  file={abstractFilePath}
+                  folder={props.folder}
+                />
+              ));
+
+              confirmation.open();
+              return;
+            }
+
+            new Notice(`${e}`);
+          });
         return;
 
       case "folder":
@@ -116,6 +143,9 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
         new Notice("You can't move a parent folder under its children");
         return;
     }
+
+    console.log("On drop files")
+    // props.onClickFolder();
   };
 
   const handleDelete = () => {
