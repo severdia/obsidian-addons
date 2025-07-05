@@ -26,7 +26,7 @@
     --onb-folder-focused-text-color: #000000;
     --onb-folder-background-hover: #c7c6ca;
     --onb-folder-text-size: 14px;
-    --onb-folder-text-color: #9f9ea4; 
+    --onb-folder-text-color: #9f9ea4;
     --onb-folder-icon-color: #006ef6;
 
     /*Filesystem related variables*/
@@ -40,6 +40,8 @@
     --scrollbar-files-thumb: #c2c2c2;
     --scrollbar-files-thumb-hover: #7d7d7d;
 
+    /* file extension background color */
+    --apple-notes-blue: #006ef5;
   }
 
   .custom-scrollbar::-webkit-scrollbar {

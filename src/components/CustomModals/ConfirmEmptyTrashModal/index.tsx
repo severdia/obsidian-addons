@@ -10,12 +10,10 @@ interface CustomModalProps {
 
 export function ConfirmEmptyTrashModal({ modal }: Readonly<CustomModalProps>) {
   const app = useApp();
-  const { setForceNotesViewUpdate, setForceFilesystemUpdate } = useStore(
-    (state) => ({
-      setForceNotesViewUpdate: state.setForceNotesViewUpdate,
-      setForceFilesystemUpdate: state.setForceFilesystemUpdate,
-    })
-  );
+  const { setForceFilesystemUpdate, setNotes } = useStore((state) => ({
+    setForceFilesystemUpdate: state.setForceFilesystemUpdate,
+    setNotes: state.setNotes,
+  }));
 
   useEffect(() => {
     modal.setTitle("Empty Trash");
@@ -29,8 +27,8 @@ export function ConfirmEmptyTrashModal({ modal }: Readonly<CustomModalProps>) {
 
       if (isTrashFolderExist) {
         await app.vault.adapter.rmdir(normalizePath(TRASH_ROOT), true);
-        setForceNotesViewUpdate();
         setForceFilesystemUpdate();
+        setNotes([]);
       }
     } catch (e) {
       new Notice(e);

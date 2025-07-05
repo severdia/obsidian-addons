@@ -1,7 +1,7 @@
 import { Folder } from "components/Folder";
 import { TFolder } from "obsidian";
 import { useState, useCallback } from "react";
-import { toBoolean, sortFilesAlphabetically } from "utils";
+import { toBoolean, sortFoldersAlphabetically } from "utils";
 import { useStore } from "store";
 
 interface FilesystemProps {
@@ -35,7 +35,6 @@ export function Filesystem(props: Readonly<FilesystemProps>) {
           onClickChevron={() => showSubfolders(folder)}
           isOpen={isOpen}
           onClickFolder={() => {
-            console.log("clicked folder : " + folder.path);
             setIsFolderFocused(true);
             setCurrentActiveFolderPath(folder.path);
           }}
@@ -51,7 +50,7 @@ export function Filesystem(props: Readonly<FilesystemProps>) {
       >
         {isOpen && (
           <ul className="onb-pl-2 onb-list-none onb-m-0">
-            {sortFilesAlphabetically(folder.children).map(
+            {sortFoldersAlphabetically(folder.children).map(
               (child) =>
                 child instanceof TFolder && (
                   <Filesystem folder={child} key={child.path} />

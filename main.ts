@@ -7,12 +7,16 @@ interface NotesBrowserSettings {
   isDraggingFilesAndFoldersdisabled: boolean;
   hideAttachmentFolder: boolean;
   hideVaultFolder: boolean;
+  sortBy: "default" | "date-edited" | "date-created" | "title";
+  sortOrder: "ascending" | "descending";
 }
 
 const DEFAULT_SETTINGS: NotesBrowserSettings = {
   isDraggingFilesAndFoldersdisabled: false,
   hideAttachmentFolder: false,
   hideVaultFolder: false,
+  sortBy: "default",
+  sortOrder: "ascending",
 };
 
 export default class NotesBrowser extends Plugin {
@@ -45,10 +49,13 @@ export default class NotesBrowser extends Plugin {
   }
 
   updateNotesView = () => {
-    const { setForceFilesystemUpdate, setForceNotesViewUpdate } =
-      useStore.getState();
+    const {
+      setForceFilesystemUpdate,
+      setCurrentActiveFolderPath,
+      currentActiveFolderPath,
+    } = useStore.getState();
     setForceFilesystemUpdate();
-    setForceNotesViewUpdate();
+    setCurrentActiveFolderPath(currentActiveFolderPath);
   };
 
   onDelete = () => {
@@ -68,7 +75,12 @@ export default class NotesBrowser extends Plugin {
   };
 
   onActiveLeafChange = (leaf: WorkspaceLeaf | null) => {
-    if (leaf?.getViewState().type !== "markdown") return;
+    if (
+      leaf?.getViewState().type !== "markdown" &&
+      leaf?.getViewState().type !== "canvas" &&
+      leaf?.getViewState().type !== "base"
+    )
+      return;
     const currentOpenFile = this.app.workspace.getActiveFile();
     if (!currentOpenFile?.parent) return;
     useStore.getState().setCurrentActiveFilePath(currentOpenFile.path);

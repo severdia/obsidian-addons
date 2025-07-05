@@ -5,6 +5,8 @@ export { PluginContext } from "./pluginContext";
 export { AppContext } from "./appContext";
 export { ObsidianConfigContext } from "./ObsidianConfigContext";
 
+export const ALLOWDED_FILE_EXTENSION_SET = new Set(["md", "base", "canvas"]);
+
 export function isContainFolders(folder: TFolder) {
   const { settings } = usePlugin();
   const attachementFolderName = (
@@ -24,7 +26,7 @@ export function isContainFolders(folder: TFolder) {
   );
 }
 
-export function sortFilesAlphabetically(
+export function sortFoldersAlphabetically(
   files?: TAbstractFile[]
 ): TAbstractFile[] {
   if (!files) return [];
@@ -32,8 +34,10 @@ export function sortFilesAlphabetically(
 }
 
 export function getNumberOfNotes(files: TAbstractFile[]) {
-  return files.filter((file) => file instanceof TFile && file.extension == "md")
-    .length;
+  return files.filter(
+    (file) =>
+      file instanceof TFile && ALLOWDED_FILE_EXTENSION_SET.has(file.extension)
+  ).length;
 }
 
 export function toBoolean(value: string | null) {

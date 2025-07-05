@@ -3,5 +3,6 @@ export interface NoteCommonProps extends React.ComponentProps<"div"> {
   title: string;
   description: string;
   lastModificationTimeOrDate: string;
-  isSelected ?: boolean
+  isSelected ?: boolean;
+  extension ?: string
 }

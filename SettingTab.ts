@@ -47,7 +47,7 @@ export class SettingTab extends PluginSettingTab {
         );
         toggleComp.onChange(async (value: boolean) => {
           this.plugin.settings.isDraggingFilesAndFoldersdisabled = value;
-          this.updateSettings();
+          await this.updateSettings();
         });
       });
 
@@ -60,22 +60,51 @@ export class SettingTab extends PluginSettingTab {
         toggleComp.setValue(this.plugin.settings.hideAttachmentFolder);
         toggleComp.onChange(async (value: boolean) => {
           this.plugin.settings.hideAttachmentFolder = value;
-          this.updateSettings();
+          await this.updateSettings();
         });
       });
 
-
     new Setting(containerEl)
       .setName("Hide vault name")
-      .setDesc(
-        "This setting hides vault name from the file explorer."
-      )
+      .setDesc("This setting hides vault name from the file explorer.")
       .addToggle((toggleComp) => {
         toggleComp.setValue(this.plugin.settings.hideVaultFolder);
         toggleComp.onChange(async (value: boolean) => {
           this.plugin.settings.hideVaultFolder = value;
-          this.updateSettings();
+          await this.updateSettings();
         });
+      });
+
+    new Setting(containerEl)
+      .setName("Sort By")
+      .addDropdown((dropDownComponent) => {
+        dropDownComponent
+          .addOption("default", "Default (Title)")
+          .addOption("date-edited", "Date Edited")
+          .addOption("date-created", "Date Created")
+          .addOption("title", "Title")
+          .setValue(this.plugin.settings.sortBy)
+          .onChange(
+            async (
+              value: "default" | "date-edited" | "date-created" | "title"
+            ) => {
+              this.plugin.settings.sortBy = value;
+              await this.updateSettings();
+            }
+          );
+      });
+
+    new Setting(containerEl)
+      .setName("Sorting Order")
+      .addDropdown((dropDownComponent) => {
+        dropDownComponent
+          .addOption("ascending", "Ascending")
+          .addOption("descending", "Descending")
+          .setValue(this.plugin.settings.sortOrder)
+          .onChange(async (value: "ascending" | "descending") => {
+            this.plugin.settings.sortOrder = value;
+            await this.updateSettings();
+          });
       });
   }
 

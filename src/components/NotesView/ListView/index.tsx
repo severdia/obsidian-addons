@@ -1,6 +1,5 @@
 import { Note } from "components/Note";
 import { TFile } from "obsidian";
-import { useEffect } from "react";
 import { AutoSizer, List, ListRowProps } from "react-virtualized";
 
 export const ListView = ({ notes }: { notes: TFile[] }) => {

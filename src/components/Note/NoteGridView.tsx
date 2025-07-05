@@ -7,6 +7,7 @@ export const NoteGridView = memo(
     imageLink,
     title,
     lastModificationTimeOrDate,
+    extension,
     ...divProps
   }: NoteCommonProps) => {
     return (

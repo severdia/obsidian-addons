@@ -11,13 +11,15 @@ export const TrashFolder = memo(() => {
   const app = useApp();
   const setNotes = useStore((state) => state.setNotes);
   const [filesCount, setFilesCount] = useState("..");
-  const { currentActiveFolderPath, setCurrentActiveFolderPath, forceFilesyetemUpdate } = useStore(
-    (state) => ({
-      currentActiveFolderPath: state.currentActiveFolderPath,
-      setCurrentActiveFolderPath: state.setCurrentActiveFolderPath,
-      forceFilesyetemUpdate: state.forceFilesyetemUpdate
-    })
-  );
+  const {
+    currentActiveFolderPath,
+    setCurrentActiveFolderPath,
+    forceFilesyetemUpdate,
+  } = useStore((state) => ({
+    currentActiveFolderPath: state.currentActiveFolderPath,
+    setCurrentActiveFolderPath: state.setCurrentActiveFolderPath,
+    forceFilesyetemUpdate: state.forceFilesyetemUpdate,
+  }));
 
   const isActive = currentActiveFolderPath === TRASH_ROOT;
   const activeBackgroundColor = isActive
@@ -57,7 +59,6 @@ export const TrashFolder = memo(() => {
               normalizePath(normalizeFilePath)
             );
             const name = filePath.replace(`${folderPath}/`, "");
-            console.log(filePath)
             deletedFiles.push({
               deleted: true,
               content: content,
@@ -66,6 +67,9 @@ export const TrashFolder = memo(() => {
               extension: "md",
               name: name,
               path: filePath,
+              getShortName: () => {
+                return name;
+              },
             });
           } catch (e) {}
         }

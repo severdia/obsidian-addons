@@ -1,8 +1,11 @@
 import { useStore } from "store";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { NotesViewToolbar } from "./NotesViewToolbar";
 import { GalleryView } from "./GalleryView";
 import { ListView } from "./ListView";
+import { usePlugin } from "hooks";
+import { TFile } from "obsidian";
+import { ALLOWDED_FILE_EXTENSION_SET } from "utils";
 
 export function NotesView() {
   const { files, notesViewType, forceNotesViewUpdate } = useStore((state) => ({
@@ -11,15 +14,31 @@ export function NotesView() {
     forceNotesViewUpdate: state.forceNotesViewUpdate,
   }));
 
-  useEffect(() => {
-    console.log("rendered notes view - useEffect");
-  }, [forceNotesViewUpdate]);
+  const { settings } = usePlugin();
+  const { sortBy, sortOrder } = settings;
+  const sortNotes = (fileA: TFile, fileB: TFile): number => {
+    const order = sortOrder === "descending" ? -1 : 1;
+
+    switch (sortBy) {
+      case "default":
+      case "title":
+        return order * fileA.name.localeCompare(fileB.name);
+
+      case "date-edited":
+        return order * (fileA.stat.mtime - fileB.stat.mtime);
+
+      case "date-created":
+        return order * (fileA.stat.ctime - fileB.stat.ctime);
+
+      default:
+        return order * fileA.name.localeCompare(fileB.name);
+    }
+  };
 
   const notes = useMemo(() => {
-    console.log("recomputed files");
     return files
-      .filter((file) => file.extension == "md")
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .filter((file) => ALLOWDED_FILE_EXTENSION_SET.has(file.extension))
+      .sort(sortNotes);
   }, [files, forceNotesViewUpdate]);
 
   return (

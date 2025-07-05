@@ -34,8 +34,6 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
     notesViewType,
     setIsFolderFocused,
     isFolderFocused,
-    setCurrentActiveFilePath,
-    setCurrentActiveFolderPath,
   } = useStore((state) => ({
     forceNotesViewUpdate: state.forceNotesViewUpdate,
     notesViewType: state.notesViewType,
@@ -202,7 +200,6 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
     const fileMenu = new Menu();
 
     if (file.path.startsWith(".trash")) {
-      console.log("delted fles :)");
       fileMenu.addItem((menuItem) => {
         menuItem.setTitle("Restore Note");
         menuItem.setIcon("undo-2");
@@ -269,6 +266,7 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
             imageLink={imageLink}
             lastModificationTimeOrDate={getLastModified(file)}
             isSelected={isSelected}
+            extension={file.extension}
           />
         </div>
       )}
@@ -284,6 +282,7 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
           title={file.basename}
           description={description}
           imageLink={imageLink}
+          extension={file.extension}
           lastModificationTimeOrDate={getLastModified(file)}
         />
       )}

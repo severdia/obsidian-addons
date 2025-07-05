@@ -9,6 +9,7 @@ export const NoteListView = memo(
     title,
     isSelected,
     lastModificationTimeOrDate,
+    extension,
     ...divProps
   }: NoteCommonProps) => {
     const isFolderFocused = useStore((state) => state.isFolderFocused);
@@ -35,6 +36,7 @@ export const NoteListView = memo(
           >
             {title}
           </div>
+
           <div className="onb-flex onb-flex-row onb-gap-2 onb-w-full">
             <div
               className={`${timeClasses} onb-text-[length:--onb-note-text-description-size] onb-font-normal onb-text-nowrap`}
@@ -47,6 +49,11 @@ export const NoteListView = memo(
               {description}
             </div>
           </div>
+          {extension && extension !== "md" && (
+            <div className="onb-bg-[var(--apple-notes-blue)] onb-text-white onb-rounded-full onb-text-[length:--onb-note-text-description-size] onb-w-fit onb-px-1">
+              {extension.toUpperCase()}
+            </div>
+          )}
         </div>
         {imageLink && (
           <img

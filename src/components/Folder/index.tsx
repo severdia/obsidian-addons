@@ -90,6 +90,15 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
     if (data === "") return;
     const { type, path } = JSON.parse(data);
     const abstractFilePath = app.vault.getAbstractFileByPath(path);
+    let sourceFolderPath = "";
+
+    if (
+      abstractFilePath &&
+      abstractFilePath.parent &&
+      abstractFilePath.parent.path
+    ) {
+      sourceFolderPath = abstractFilePath.parent.path;
+    }
 
     if (!abstractFilePath) {
       if (currentActiveFolderPath === ".trash") {
@@ -98,16 +107,16 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
       return;
     }
 
-
     switch (type) {
       case "file":
-        console.log("abstract folder path : "+abstractFilePath.parent!.path)
         app.vault
           .rename(
             abstractFilePath,
             `${props.folder.path}/${abstractFilePath.name}`
           )
-          .then(() => setCurrentActiveFolderPath(abstractFilePath.parent!.path))
+          .then(() => {
+            setCurrentActiveFolderPath(sourceFolderPath);
+          })
           .catch(async (e) => {
             const isFileAlreadyExist = await app.vault.adapter.exists(
               normalizePath(`${props.folder.path}/${abstractFilePath.name}`)
@@ -143,9 +152,6 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
         new Notice("You can't move a parent folder under its children");
         return;
     }
-
-    console.log("On drop files")
-    // props.onClickFolder();
   };
 
   const handleDelete = () => {
