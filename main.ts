@@ -1,4 +1,10 @@
-import { Plugin, TFile, WorkspaceLeaf } from "obsidian";
+import {
+  Plugin,
+  TFile,
+  WorkspaceLeaf,
+  WorkspaceRoot,
+  WorkspaceWindow,
+} from "obsidian";
 import { PluginView, VIEW_TYPE } from "./src/PluginView";
 import { useStore } from "store";
 import { SettingTab } from "./SettingTab";
@@ -75,12 +81,17 @@ export default class NotesBrowser extends Plugin {
   };
 
   onActiveLeafChange = (leaf: WorkspaceLeaf | null) => {
+    if (leaf && leaf.getContainer() instanceof WorkspaceWindow) {
+      return;
+    }
+
     if (
       leaf?.getViewState().type !== "markdown" &&
       leaf?.getViewState().type !== "canvas" &&
       leaf?.getViewState().type !== "base"
     )
       return;
+
     const currentOpenFile = this.app.workspace.getActiveFile();
     if (!currentOpenFile?.parent) return;
     useStore.getState().setCurrentActiveFilePath(currentOpenFile.path);

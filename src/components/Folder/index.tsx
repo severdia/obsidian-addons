@@ -10,7 +10,7 @@ import { Chevron } from "components/Icons/Chevron";
 import { FolderOutline } from "components/Icons/FolderOutline";
 import { useApp, useDragHandlers, useObsidianConfig, usePlugin } from "hooks";
 import { TFolder, Notice, Menu, TFile, normalizePath } from "obsidian";
-import { useState, DragEventHandler, memo } from "react";
+import { useState, DragEventHandler, memo, useCallback } from "react";
 import Dropzone from "react-dropzone";
 
 import { useStore } from "store";
@@ -36,12 +36,17 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
 
   const isAttachmentFolder = props.folder.name === attachementFolderName;
 
-  const { currentActiveFolderPath, setCurrentActiveFolderPath } = useStore(
-    (state) => ({
-      currentActiveFolderPath: state.currentActiveFolderPath,
-      setCurrentActiveFolderPath: state.setCurrentActiveFolderPath,
-    })
-  );
+  const {
+    currentActiveFolderPath,
+    setCurrentActiveFolderPath,
+    setCurrentActiveFilePath,
+    notes,
+  } = useStore((state) => ({
+    currentActiveFolderPath: state.currentActiveFolderPath,
+    setCurrentActiveFolderPath: state.setCurrentActiveFolderPath,
+    setCurrentActiveFilePath: state.setCurrentActiveFilePath,
+    notes: state.notes,
+  }));
 
   const isFolderFocused = useStore((state) => state.isFolderFocused);
   const isActive = currentActiveFolderPath === props.folder.path;
@@ -116,6 +121,17 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
           )
           .then(() => {
             setCurrentActiveFolderPath(sourceFolderPath);
+
+            if (notes.length > 0) {
+              setCurrentActiveFilePath(notes[0].path);
+              const leaf = app.workspace.getLeaf(false);
+              app.workspace.setActiveLeaf(leaf, {
+                focus: true,
+              });
+              leaf.openFile(notes[0], { eState: { focus: true } });
+            } else {
+              setCurrentActiveFilePath("");
+            }
           })
           .catch(async (e) => {
             const isFileAlreadyExist = await app.vault.adapter.exists(
@@ -198,20 +214,26 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
 
     const folderMenu = new Menu();
 
+    //@ts-ignore addSections is a private method, not exposed by Obsidian API, so we need to ignore type checking
+    folderMenu.addSections(["title", "open", "action-primary", "action", "info", "view", "system", "", "danger"])
+
     folderMenu.addItem((menuItem) => {
       menuItem.setTitle("New note");
       menuItem.setIcon("edit");
+      menuItem.setSection("action-primary")
       menuItem.onClick(handleNewNote);
     });
 
     folderMenu.addItem((menuItem) => {
       menuItem.setTitle("New folder");
+      menuItem.setSection("action-primary")
       menuItem.setIcon("folder");
       menuItem.onClick(handleNewFolder);
     });
 
     folderMenu.addItem((menuItem) => {
       menuItem.setTitle("Rename");
+      menuItem.setSection("danger")
       menuItem.setIcon("pencil");
       menuItem.onClick(handleRename);
     });
@@ -220,13 +242,16 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
       menuItem.setTitle("Delete");
       menuItem.setIcon("trash");
       menuItem.onClick(handleDelete);
+      menuItem.setSection("danger")
+      //@ts-ignore
+      menuItem.setWarning(!0)
     });
 
     app.workspace.trigger(
       "file-menu",
       folderMenu,
-      fileToTrigger,
-      "file-explorer"
+      props.folder,
+      "file-explorer-context-menu"
     );
 
     folderMenu.showAtPosition({ x: e.pageX, y: e.pageY });

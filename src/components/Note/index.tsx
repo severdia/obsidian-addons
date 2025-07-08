@@ -12,8 +12,7 @@ import { NoteListView } from "./NoteListView";
 import { NoteGridView } from "./NoteGridView";
 import { TRASH_ROOT } from "components/TreeView/TrashFolder/constant";
 import * as nodePath from "path";
-
-const isNodeAvailable = typeof nodePath?.basename === "function";
+import { useRef } from "react";
 
 interface CustomTFile extends TFile {
   deleted?: boolean;
@@ -26,6 +25,10 @@ interface NoteProps {
 }
 
 export const Note = memo(({ file, isFirst }: NoteProps) => {
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const CLICK_DELAY = 200; // used to prevent interference between click and doubleClick
+
+  const isNodeAvailable = typeof nodePath?.basename === "function";
   const currentActiveFilePath = useStore(
     (state) => state.currentActiveFilePath
   );
@@ -124,11 +127,12 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
     }
   }, []);
 
-  const openFile = useCallback(() => {
+  const openFile = useCallback((inSeparatedWindow: boolean = false) => {
     if (!app) return;
     const fileToOpen = app.vault.getAbstractFileByPath(file.path);
     if (!fileToOpen) return;
-    const leaf = app.workspace.getLeaf(false);
+    const leaf = app.workspace.getLeaf(inSeparatedWindow ? "window" : false);
+
     app.workspace.setActiveLeaf(leaf, {
       focus: true,
     });
@@ -137,9 +141,22 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
   }, []);
 
   const onClickOpenFile = useCallback(() => {
-    openFile();
-    isFolderFocused !== false && setIsFolderFocused(false);
-  }, []);
+    if (clickTimeoutRef.current) return; // Prevent double invocation
+
+    clickTimeoutRef.current = setTimeout(() => {
+      openFile();
+      isFolderFocused !== false && setIsFolderFocused(false);
+      clickTimeoutRef.current = null;
+    }, CLICK_DELAY);
+  }, [openFile, isFolderFocused, setIsFolderFocused]);
+
+  const onDoubleClickOpenFile = useCallback(() => {
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+    }
+    openFile(true);
+  }, [openFile]);
 
   const handleDelete = useCallback(() => {
     if (!app) return;
@@ -196,8 +213,22 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
   }, []);
 
   const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
     if (!app) return;
     const fileMenu = new Menu();
+
+    //@ts-ignore addSections is a private method, not exposed by Obsidian API, so we need to ignore type checking
+    fileMenu.addSections([
+      "open",
+      "action",
+      "title",
+      "action-primary",
+      "info",
+      "view",
+      "system",
+      "",
+      "danger",
+    ]);
 
     if (file.path.startsWith(".trash")) {
       fileMenu.addItem((menuItem) => {
@@ -211,34 +242,38 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
       fileMenu.showAtPosition({ x: e.pageX, y: e.pageY });
       return;
     }
-    const fileToTrigger = app.vault.getAbstractFileByPath(file.parent!.path);
+    const fileToTrigger = app.vault.getAbstractFileByPath(file.path);
+
+    app.workspace.trigger(
+      "file-menu",
+      fileMenu,
+      fileToTrigger,
+      "file-context-menu"
+    );
 
     if (!fileToTrigger) return;
 
     fileMenu.addItem((menuItem) => {
-      menuItem.setTitle("Duplicate Note");
+      menuItem.setTitle("Duplicate note");
       menuItem.setIcon("copy");
+      menuItem.setSection("action");
       menuItem.onClick(handleDuplicate);
+    });
+
+    fileMenu.addItem((menuItem) => {
+      menuItem.setTitle("Rename");
+      menuItem.setIcon("pencil");
+      menuItem.setSection("action");
+      menuItem.onClick(handleRename);
     });
 
     fileMenu.addItem((menuItem) => {
       menuItem.setTitle("Delete");
       menuItem.setIcon("trash");
       menuItem.onClick(handleDelete);
+      menuItem.setSection("action");
     });
 
-    fileMenu.addItem((menuItem) => {
-      menuItem.setTitle("Rename");
-      menuItem.setIcon("pencil");
-      menuItem.onClick(handleRename);
-    });
-
-    app.workspace.trigger(
-      "file-menu",
-      fileMenu,
-      fileToTrigger,
-      "file-explorer"
-    );
 
     fileMenu.showAtPosition({ x: e.pageX, y: e.pageY });
   };
@@ -257,6 +292,7 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
           <NoteListView
             className={`onb-p-3 ${backgroundListColorClass} onb-h-full onb-select-none onb-flex onb-flex-row onb-items-center`}
             onClick={onClickOpenFile}
+            onDoubleClick={onDoubleClickOpenFile}
             draggable={!settings.isDraggingFilesAndFoldersdisabled}
             onDragStart={onDragStart}
             data-path={file.path}
@@ -274,7 +310,8 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
       {notesViewType === "GRID" && (
         <NoteGridView
           className={`onb-p-3 ${backgroundGridColorClass} onb-w-full onb-max-w-[--onb-note-grid-width] onb-h-[--onb-note-grid-height] onb-select-none onb-rounded onb-flex onb-flex-col onb-items-center onb-gap-3`}
-          onClick={openFile}
+          onClick={onClickOpenFile}
+          onDoubleClick={onDoubleClickOpenFile}
           draggable={!settings.isDraggingFilesAndFoldersdisabled}
           onDragStart={onDragStart}
           data-path={file.path}
