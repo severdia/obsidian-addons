@@ -106,6 +106,19 @@ export class SettingTab extends PluginSettingTab {
             await this.updateSettings();
           });
       });
+
+    new Setting(containerEl)
+      .setName("Open on Start")
+      .setDesc(
+        "Turn off if you don't want file tree view to be opened automatically during vault start"
+      )
+      .addToggle((toggleComp) => {
+        toggleComp.setValue(this.plugin.settings.openOnStartup);
+        toggleComp.onChange(async (value: boolean) => {
+          this.plugin.settings.openOnStartup = value;
+          await this.updateSettings();
+        });
+      });
   }
 
   updateSettings = async () => {
