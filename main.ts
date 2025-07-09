@@ -1,10 +1,4 @@
-import {
-  Plugin,
-  TFile,
-  WorkspaceLeaf,
-  WorkspaceRoot,
-  WorkspaceWindow,
-} from "obsidian";
+import { Plugin, WorkspaceLeaf, WorkspaceWindow } from "obsidian";
 import { PluginView, VIEW_TYPE } from "./src/PluginView";
 import { useStore } from "store";
 import { SettingTab } from "./SettingTab";
@@ -15,6 +9,7 @@ interface NotesBrowserSettings {
   hideVaultFolder: boolean;
   sortBy: "default" | "date-edited" | "date-created" | "title";
   sortOrder: "ascending" | "descending";
+  openOnStartup: boolean;
 }
 
 const DEFAULT_SETTINGS: NotesBrowserSettings = {
@@ -23,6 +18,7 @@ const DEFAULT_SETTINGS: NotesBrowserSettings = {
   hideVaultFolder: false,
   sortBy: "default",
   sortOrder: "ascending",
+  openOnStartup: true,
 };
 
 export default class NotesBrowser extends Plugin {
@@ -37,6 +33,12 @@ export default class NotesBrowser extends Plugin {
 
     this.addRibbonIcon("folder", "Apple Notes", () => {
       this.activateView();
+    });
+
+    this.app.workspace.onLayoutReady(async () => {
+      if (this.settings.openOnStartup) {
+        this.activateView();
+      }
     });
 
     this.app.workspace.on("active-leaf-change", this.onActiveLeafChange);
