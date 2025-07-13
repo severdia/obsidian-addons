@@ -3,7 +3,7 @@ import {
   ConfirmDeleteModal,
   RenameModal,
 } from "components/CustomModals";
-import { useApp, useDragHandlers, usePlugin } from "hooks";
+import { useApp, useDragHandlers, useObsidianConfig, usePlugin } from "hooks";
 import { Menu, normalizePath, Notice, TFile } from "obsidian";
 import { memo, useCallback, useEffect, useState } from "react";
 import { useStore } from "store";
@@ -17,6 +17,7 @@ import { useRef } from "react";
 interface CustomTFile extends TFile {
   deleted?: boolean;
   content?: string;
+  isAttachment?: boolean;
 }
 
 interface NoteProps {
@@ -53,6 +54,8 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
   const { onDragStart } = useDragHandlers(file);
   const isSelected = currentActiveFilePath == file.path;
 
+  const isAttachmentFolder = file.isAttachment;
+
   const backgroundListColorClass = (() => {
     if (!isSelected) return "onb-bg-white";
 
@@ -72,6 +75,7 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
     : "onb-bg-[--onb-divider-background] -onb-mt-[--onb-divider-height]";
 
   useEffect(() => {
+    if (isAttachmentFolder) return;
     const updateContent = (content: string) => {
       setDescription(content.slice(0, Math.min(content.length, 400)));
       const imageLink = extractImageLink(content);
@@ -274,7 +278,6 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
       menuItem.setSection("action");
     });
 
-
     fileMenu.showAtPosition({ x: e.pageX, y: e.pageY });
   };
 
@@ -298,8 +301,10 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
             data-path={file.path}
             onContextMenu={handleContextMenu}
             title={file.basename}
-            description={description}
-            imageLink={imageLink}
+            description={isAttachmentFolder ? "" : description}
+            imageLink={
+              isAttachmentFolder ? app.vault.getResourcePath(file) : imageLink
+            }
             lastModificationTimeOrDate={getLastModified(file)}
             isSelected={isSelected}
             extension={file.extension}
@@ -317,10 +322,12 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
           data-path={file.path}
           onContextMenu={handleContextMenu}
           title={file.basename}
-          description={description}
-          imageLink={imageLink}
-          extension={file.extension}
+          description={isAttachmentFolder ? "" : description}
+          imageLink={
+            isAttachmentFolder ? app.vault.getResourcePath(file) : imageLink
+          }
           lastModificationTimeOrDate={getLastModified(file)}
+          extension={file.extension}
         />
       )}
     </>

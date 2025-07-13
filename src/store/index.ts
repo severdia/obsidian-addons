@@ -1,4 +1,5 @@
-import { App, TFile } from "obsidian";
+import { App, TFile, TFolder } from "obsidian";
+import { useObsidianConfig } from "hooks";
 import { create } from "zustand";
 
 type NotesViewType = "LIST" | "GRID";
@@ -55,7 +56,8 @@ export const useStore = create<State>()((set) => ({
   setCurrentActiveFolderPath: (path: string | null, options) =>
     set((state) => {
       if (!path || !state.app) return state;
-      else if (options?.isTrashFolder)
+
+      if (options?.isTrashFolder)
         return { ...state, currentActiveFolderPath: path, notes: [] };
 
       const filesUnderFolder = state.app.vault.getFolderByPath(path)?.children;

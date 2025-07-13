@@ -3,19 +3,37 @@ import { useMemo } from "react";
 import { NotesViewToolbar } from "./NotesViewToolbar";
 import { GalleryView } from "./GalleryView";
 import { ListView } from "./ListView";
-import { usePlugin } from "hooks";
-import { TFile } from "obsidian";
+import { useApp, useObsidianConfig, usePlugin } from "hooks";
+import { TFile, TFolder } from "obsidian";
 import { ALLOWDED_FILE_EXTENSION_SET } from "utils";
 
 export function NotesView() {
-  const { files, notesViewType, forceNotesViewUpdate } = useStore((state) => ({
+  const {
+    files,
+    notesViewType,
+    forceNotesViewUpdate,
+    currentActiveFolderPath,
+  } = useStore((state) => ({
     files: state.notes,
     notesViewType: state.notesViewType,
     forceNotesViewUpdate: state.forceNotesViewUpdate,
+    currentActiveFolderPath: state.currentActiveFolderPath,
   }));
 
   const { settings } = usePlugin();
+  const app = useApp();
   const { sortBy, sortOrder } = settings;
+  const attachementFolderName = (
+    useObsidianConfig().attachmentFolderPath as string
+  ).replace("./", "");
+
+  const currentActiveFolderAbstractFile = app.vault.getAbstractFileByPath(
+    currentActiveFolderPath
+  )!;
+
+  const isAttachmentFolder =
+    currentActiveFolderAbstractFile.name === attachementFolderName;
+
   const sortNotes = (fileA: TFile, fileB: TFile): number => {
     const order = sortOrder === "descending" ? -1 : 1;
 
@@ -36,8 +54,38 @@ export function NotesView() {
   };
 
   const notes = useMemo(() => {
+    if (isAttachmentFolder) {
+      let attachments: TFile[] = [];
+      function getAttachmentFileRecursively(folder: TFolder) {
+        const children = folder.children;
+        console.log(children);
+        if (children.length === 0) return;
+        attachments = attachments.concat(
+          children.filter((file) => file instanceof TFile)
+        );
+        children
+          .filter((folder) => folder instanceof TFolder)
+          .forEach((folder) => getAttachmentFileRecursively(folder));
+      }
+
+      getAttachmentFileRecursively(currentActiveFolderAbstractFile as TFolder);
+
+      return attachments
+        .filter((file) => {
+          (file as any).isAttachment = true;
+          return true;
+        })
+        .sort(sortNotes);
+    }
+
     return files
-      .filter((file) => ALLOWDED_FILE_EXTENSION_SET.has(file.extension))
+      .filter((file) => {
+        if (isAttachmentFolder) {
+          (file as any).isAttachment = true;
+          return true;
+        }
+        return ALLOWDED_FILE_EXTENSION_SET.has(file.extension);
+      })
       .sort(sortNotes);
   }, [files, forceNotesViewUpdate]);
 

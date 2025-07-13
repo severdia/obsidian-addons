@@ -86,16 +86,21 @@ export default class NotesBrowser extends Plugin {
     if (leaf && leaf.getContainer() instanceof WorkspaceWindow) {
       return;
     }
-
     if (
       leaf?.getViewState().type !== "markdown" &&
       leaf?.getViewState().type !== "canvas" &&
-      leaf?.getViewState().type !== "base"
+      leaf?.getViewState().type !== "base" &&
+      leaf?.getViewState().type !== "image"
     )
       return;
 
     const currentOpenFile = this.app.workspace.getActiveFile();
     if (!currentOpenFile?.parent) return;
+
+    if (leaf?.getViewState().type === "image") {
+      useStore.getState().setCurrentActiveFilePath(currentOpenFile.path);
+      return
+    }
     useStore.getState().setCurrentActiveFilePath(currentOpenFile.path);
     useStore.getState().setCurrentActiveFolderPath(currentOpenFile.parent.path);
   };

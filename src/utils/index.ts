@@ -40,6 +40,24 @@ export function getNumberOfNotes(files: TAbstractFile[]) {
   ).length;
 }
 
+export function getNumberOfNotesRecursively(folder: TFolder) {
+  let count = 0;
+  function getAttachmentFileRecursively(folder: TFolder) {
+    const children = folder.children;
+    console.log(children);
+    if (children.length === 0) return;
+    count += children.filter((file) => file instanceof TFile).length;
+
+    children
+      .filter((folder) => folder instanceof TFolder)
+      .forEach((folder) => getAttachmentFileRecursively(folder));
+  }
+
+  getAttachmentFileRecursively(folder);
+
+  return count;
+}
+
 export function toBoolean(value: string | null) {
   return value === "true";
 }

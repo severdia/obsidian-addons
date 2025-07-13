@@ -14,7 +14,11 @@ import { useState, DragEventHandler, memo, useCallback } from "react";
 import Dropzone from "react-dropzone";
 
 import { useStore } from "store";
-import { isContainFolders, getNumberOfNotes } from "utils";
+import {
+  isContainFolders,
+  getNumberOfNotes,
+  getNumberOfNotesRecursively,
+} from "utils";
 
 interface FolderProps {
   isOpen: boolean;
@@ -215,25 +219,35 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
     const folderMenu = new Menu();
 
     //@ts-ignore addSections is a private method, not exposed by Obsidian API, so we need to ignore type checking
-    folderMenu.addSections(["title", "open", "action-primary", "action", "info", "view", "system", "", "danger"])
+    folderMenu.addSections([
+      "title",
+      "open",
+      "action-primary",
+      "action",
+      "info",
+      "view",
+      "system",
+      "",
+      "danger",
+    ]);
 
     folderMenu.addItem((menuItem) => {
       menuItem.setTitle("New note");
       menuItem.setIcon("edit");
-      menuItem.setSection("action-primary")
+      menuItem.setSection("action-primary");
       menuItem.onClick(handleNewNote);
     });
 
     folderMenu.addItem((menuItem) => {
       menuItem.setTitle("New folder");
-      menuItem.setSection("action-primary")
+      menuItem.setSection("action-primary");
       menuItem.setIcon("folder");
       menuItem.onClick(handleNewFolder);
     });
 
     folderMenu.addItem((menuItem) => {
       menuItem.setTitle("Rename");
-      menuItem.setSection("danger")
+      menuItem.setSection("danger");
       menuItem.setIcon("pencil");
       menuItem.onClick(handleRename);
     });
@@ -242,9 +256,9 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
       menuItem.setTitle("Delete");
       menuItem.setIcon("trash");
       menuItem.onClick(handleDelete);
-      menuItem.setSection("danger")
+      menuItem.setSection("danger");
       //@ts-ignore
-      menuItem.setWarning(!0)
+      menuItem.setWarning(!0);
     });
 
     app.workspace.trigger(
@@ -344,7 +358,7 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
                 {props.folder.children?.length !== 0 && (
                   <span>
                     {isAttachmentFolder
-                      ? props.folder.children.length
+                      ? getNumberOfNotesRecursively(props.folder)
                       : getNumberOfNotes(props.folder.children)}
                   </span>
                 )}
