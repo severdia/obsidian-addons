@@ -19,6 +19,9 @@
 .onb-ml-6 {
     margin-left: 1.5rem;
 }
+.onb-box-border {
+    box-sizing: border-box;
+}
 .onb-line-clamp-2 {
     overflow: hidden;
     display: -webkit-box;
@@ -230,6 +233,9 @@
 .onb-border-2 {
     border-width: 2px;
 }
+.onb-border-\[1px\] {
+    border-width: 1px;
+}
 .onb-border-b-\[1\.5px\] {
     border-bottom-width: 1.5px;
 }
@@ -246,6 +252,13 @@
 .onb-border-gray-400 {
     --tw-border-opacity: 1;
     border-color: rgb(156 163 175 / var(--tw-border-opacity));
+}
+.onb-border-transparent {
+    border-color: transparent;
+}
+.onb-border-white {
+    --tw-border-opacity: 1;
+    border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 .onb-border-b-\[var\(--divider-color\)\] {
     border-bottom-color: var(--divider-color);
@@ -359,6 +372,9 @@
 }
 .onb-text-\[length\:--onb-folder-text-size\] {
     font-size: var(--onb-folder-text-size);
+}
+.onb-text-\[length\:--onb-note-text-badge-size\] {
+    font-size: var(--onb-note-text-badge-size);
 }
 .onb-text-\[length\:--onb-note-text-description-size\] {
     font-size: var(--onb-note-text-description-size);
@@ -478,6 +494,7 @@
 
     /* file extension background color */
     --apple-notes-blue: #006ef5;
+    --onb-note-text-badge-size: 12px;
   }
 
   .custom-scrollbar::-webkit-scrollbar {

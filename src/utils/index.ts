@@ -44,7 +44,6 @@ export function getNumberOfNotesRecursively(folder: TFolder) {
   let count = 0;
   function getAttachmentFileRecursively(folder: TFolder) {
     const children = folder.children;
-    console.log(children);
     if (children.length === 0) return;
     count += children.filter((file) => file instanceof TFile).length;
 

@@ -42,6 +42,7 @@
 
     /* file extension background color */
     --apple-notes-blue: #006ef5;
+    --onb-note-text-badge-size: 12px;
   }
 
   .custom-scrollbar::-webkit-scrollbar {

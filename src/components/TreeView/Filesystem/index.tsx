@@ -44,7 +44,7 @@ export function Filesystem(props: Readonly<FilesystemProps>) {
       <div
         className={`onb-transition-all onb-duration-[1000ms] onb-ease-in-out onb-overflow-hidden onb-transform ${
           isOpen
-            ? "onb-max-h-[1000px] onb-translate-y-0"
+            ? "onb-translate-y-0"
             : "onb-max-h-0 -onb-translate-y-2"
         }`}
       >

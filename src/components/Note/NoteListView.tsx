@@ -24,6 +24,12 @@ export const NoteListView = memo(
         ? "onb-text-white"
         : "onb-text-[color:--onb-note-text-date-color]";
 
+    const badgeBorderClasses =
+      "onb-border-[1px] onb-border-solid " +
+      (isSelected && !isFolderFocused
+        ? "onb-border-white"
+        : "onb-border-transparent");
+
     return (
       <div {...divProps}>
         <div
@@ -50,11 +56,13 @@ export const NoteListView = memo(
             </div>
           </div>
           {extension && extension !== "md" && (
-            <div className="onb-bg-[var(--apple-notes-blue)] onb-text-white onb-rounded-full onb-text-[length:--onb-note-text-description-size] onb-w-fit onb-px-1">
+            <div
+              className={`onb-bg-[var(--apple-notes-blue)] onb-box-border ${badgeBorderClasses} onb-text-white onb-rounded-full onb-text-[length:--onb-note-text-badge-size] onb-w-fit onb-px-1`}
+            >
               {extension.toUpperCase()}
             </div>
           )}
-        </div>
+        </div> 
         {imageLink && (
           <img
             src={imageLink}

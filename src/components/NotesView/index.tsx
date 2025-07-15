@@ -58,7 +58,7 @@ export function NotesView() {
       let attachments: TFile[] = [];
       function getAttachmentFileRecursively(folder: TFolder) {
         const children = folder.children;
-        console.log(children);
+        
         if (children.length === 0) return;
         attachments = attachments.concat(
           children.filter((file) => file instanceof TFile)
