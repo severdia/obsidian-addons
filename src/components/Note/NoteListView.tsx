@@ -57,7 +57,7 @@ export const NoteListView = memo(
           </div>
           {extension && extension !== "md" && (
             <div
-              className={`onb-bg-[var(--apple-notes-blue)] onb-box-border ${badgeBorderClasses} onb-text-white onb-rounded-full onb-text-[length:--onb-note-text-badge-size] onb-w-fit onb-px-1`}
+              className={`onb-bg-[var(--apple-notes-blue)] onb-box-border onb-inline-block ${badgeBorderClasses} onb-align-middle onb-text-white onb-rounded-full onb-text-[length:--onb-note-text-badge-size] onb-w-fit onb-px-1`}
             >
               {extension.toUpperCase()}
             </div>

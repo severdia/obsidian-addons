@@ -293,7 +293,7 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
             />
           </div>
           <NoteListView
-            className={`onb-p-3 ${backgroundListColorClass} onb-h-full onb-select-none onb-flex onb-flex-row onb-items-center`}
+            className={`onb-p-3 ${backgroundListColorClass} onb-overflow-hidden onb-h-full onb-select-none onb-flex onb-flex-row onb-items-center`}
             onClick={onClickOpenFile}
             onDoubleClick={onDoubleClickOpenFile}
             draggable={!settings.isDraggingFilesAndFoldersdisabled}
