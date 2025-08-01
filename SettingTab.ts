@@ -1,6 +1,7 @@
 import { useStore } from "store";
 import NotesBrowser from "./main";
 import { App, PluginSettingTab, Setting } from "obsidian";
+import { openInDefaultIndicatorStyle } from "./src/constants";
 
 export class SettingTab extends PluginSettingTab {
   plugin: NotesBrowser;
@@ -9,6 +10,7 @@ export class SettingTab extends PluginSettingTab {
     super(app, plugin);
     this.plugin = plugin;
   }
+
 
   display(): void {
     const { containerEl } = this;
@@ -116,6 +118,24 @@ export class SettingTab extends PluginSettingTab {
         toggleComp.setValue(this.plugin.settings.openOnStartup);
         toggleComp.onChange(async (value: boolean) => {
           this.plugin.settings.openOnStartup = value;
+          await this.updateSettings();
+        });
+      });
+
+    new Setting(containerEl)
+      .setName("Add a button to open media in system default app")
+      .setDesc(
+        "Turn on if you want to have a quick access to 'open in default app' just after each embeded media ( video, audio and PDFs )"
+      )
+      .addToggle((toggleComp) => {
+        toggleComp.setValue(this.plugin.settings.openInDefaultAppButton);
+        toggleComp.onChange(async (value: boolean) => {
+          if(value){
+            this.plugin.addGlobalStyle()
+          }else{
+            this.plugin.removeGlobalStyle()
+          }
+          this.plugin.settings.openInDefaultAppButton = value;
           await this.updateSettings();
         });
       });

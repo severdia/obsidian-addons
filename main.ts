@@ -1,7 +1,17 @@
-import { Plugin, WorkspaceLeaf, WorkspaceWindow } from "obsidian";
+import {
+  FileSystemAdapter,
+  Plugin,
+  TFile,
+  WorkspaceLeaf,
+  WorkspaceWindow,
+} from "obsidian";
 import { PluginView, VIEW_TYPE } from "./src/PluginView";
 import { useStore } from "store";
 import { SettingTab } from "./SettingTab";
+import { shell } from "electron";
+import * as path from "path";
+import { pathToFileURL } from "url";
+import { openInDefaultIndicatorStyle } from "./src/constants";
 
 interface NotesBrowserSettings {
   isDraggingFilesAndFoldersdisabled: boolean;
@@ -10,6 +20,7 @@ interface NotesBrowserSettings {
   sortBy: "default" | "date-edited" | "date-created" | "title";
   sortOrder: "ascending" | "descending";
   openOnStartup: boolean;
+  openInDefaultAppButton: boolean;
 }
 
 const DEFAULT_SETTINGS: NotesBrowserSettings = {
@@ -19,6 +30,7 @@ const DEFAULT_SETTINGS: NotesBrowserSettings = {
   sortBy: "default",
   sortOrder: "ascending",
   openOnStartup: true,
+  openInDefaultAppButton: true,
 };
 
 export default class NotesBrowser extends Plugin {
@@ -40,12 +52,129 @@ export default class NotesBrowser extends Plugin {
         this.activateView();
       }
     });
-
+ 
     this.app.workspace.on("active-leaf-change", this.onActiveLeafChange);
     this.app.vault.on("create", this.onCreate);
     this.app.vault.on("delete", this.onDelete);
     this.app.vault.on("rename", this.onRename);
     this.app.vault.on("modify", this.onModify);
+    this.registerImageDblClick();
+    if (this.settings.openInDefaultAppButton) {
+      this.addGlobalStyle();
+    } else {
+      this.removeGlobalStyle();
+    }
+  }
+
+  addGlobalStyle(id = "custom-embed-style") {
+    if (document.getElementById(id)) return; // prevent duplicates
+
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = openInDefaultIndicatorStyle;
+    document.head.appendChild(style);
+  }
+
+  removeGlobalStyle(id = "custom-embed-style") {
+    const style = document.getElementById(id);
+    if (style) {
+      style.remove();
+    }
+  }
+
+  registerImageDblClick(): void {
+    // Add support for both desktop right-click and mobile long-press
+    this.registerDomEvent(
+      document,
+      "click",
+      async (ev) => {
+        if (!this.settings.openInDefaultAppButton) return;
+        const img = this.findMediaElement(ev);
+        if (!img) return;
+        ev.preventDefault();
+        const activeEditor = this.app.workspace.activeEditor?.file;
+        if (!(activeEditor instanceof TFile)) return;
+        const srcAttr = img.getAttribute("src");
+
+        if (!srcAttr) {
+          console.warn("No src attribute found on image.");
+          return;
+        }
+
+        const decodedSrc = decodeURIComponent(srcAttr);
+        const activeFilePath = activeEditor?.path;
+
+        const linkDest = this.app.metadataCache.getFirstLinkpathDest(
+          decodedSrc,
+          activeFilePath
+        );
+
+        if (!linkDest) {
+          console.warn("Unable to resolve link destination for image.");
+          return;
+        }
+
+        const adapter = this.app.vault.adapter;
+        if (!(adapter instanceof FileSystemAdapter)) {
+          console.warn(
+            "Vault adapter is not a FileSystemAdapter. Cannot resolve file path."
+          );
+          return;
+        }
+
+        const vaultBasePath = adapter.getBasePath();
+        const imageFilePath = path.join(vaultBasePath, linkDest.path);
+        const fileUrl = pathToFileURL(imageFilePath).toString();
+        console.log(fileUrl);
+        shell.openExternal(fileUrl);
+      },
+      true
+    );
+  }
+
+  findMediaElement(event: MouseEvent): HTMLElement | null {
+    const target = event.target;
+    if (!target || !(target instanceof HTMLElement)) return null;
+
+    const embed = target.closest(".internal-embed") as HTMLElement;
+    if (!embed) return null;
+
+    const hasMedia =
+      embed.querySelector("img, audio, video") !== null ||
+      embed.classList.contains("pdf-embed");
+    if (!hasMedia) return null;
+
+    // Get computed styles for ::after
+    const styles = window.getComputedStyle(embed, "::after");
+    const content = styles.getPropertyValue("content");
+
+    if (!content || content === "none") return null;
+
+    const rect = embed.getBoundingClientRect();
+    const afterHeight = parseFloat(styles.getPropertyValue("height")) || 0;
+    const marginTop = parseFloat(styles.getPropertyValue("margin-top")) || 0;
+    const paddingTop = parseFloat(styles.getPropertyValue("padding-top")) || 0;
+    const paddingBottom =
+      parseFloat(styles.getPropertyValue("padding-bottom")) || 0;
+    const totalAfterHeight =
+      afterHeight + marginTop + paddingTop + paddingBottom;
+
+    const clickY = event.clientY;
+    const afterTop = rect.bottom - totalAfterHeight;
+    const afterBottom = rect.bottom;
+
+    const clickX = event.clientX;
+    const afterLeft = rect.left;
+    const afterRight = rect.right;
+
+    const isInAfter =
+      clickY >= afterTop &&
+      clickY <= afterBottom &&
+      clickX >= afterLeft &&
+      clickX <= afterRight;
+
+    console.log(isInAfter);
+    return isInAfter ? embed : null;
   }
 
   onunload() {
@@ -99,7 +228,7 @@ export default class NotesBrowser extends Plugin {
 
     if (leaf?.getViewState().type === "image") {
       useStore.getState().setCurrentActiveFilePath(currentOpenFile.path);
-      return
+      return;
     }
     useStore.getState().setCurrentActiveFilePath(currentOpenFile.path);
     useStore.getState().setCurrentActiveFolderPath(currentOpenFile.parent.path);

@@ -86,18 +86,6 @@
 .onb-h-full {
     height: 100%;
 }
-.onb-h-\[10px\] {
-    height: 10px;
-}
-.onb-h-\[\] {
-    height: ;
-}
-.onb-h-\[var\(\)\] {
-    height: var();
-}
-.onb-h-\[var\(--onb-note-text-badge-size\)\] {
-    height: var(--onb-note-text-badge-size);
-}
 .onb-max-h-0 {
     max-height: 0px;
 }
@@ -174,9 +162,6 @@
 .onb-flex-nowrap {
     flex-wrap: nowrap;
 }
-.onb-content-center {
-    align-content: center;
-}
 .onb-items-center {
     align-items: center;
 }
@@ -251,17 +236,11 @@
 .onb-border-\[1px\] {
     border-width: 1px;
 }
-.onb-border-\[0px\] {
-    border-width: 0px;
-}
 .onb-border-b-\[1\.5px\] {
     border-bottom-width: 1.5px;
 }
 .onb-border-solid {
     border-style: solid;
-}
-.onb-border-none {
-    border-style: none;
 }
 .onb-border-\[color\:--onb-note-grid-border-color\] {
     border-color: var(--onb-note-grid-border-color);
@@ -280,9 +259,6 @@
 .onb-border-white {
     --tw-border-opacity: 1;
     border-color: rgb(255 255 255 / var(--tw-border-opacity));
-}
-.onb-border-\[px\] {
-    border-color: px;
 }
 .onb-border-b-\[var\(--divider-color\)\] {
     border-bottom-color: var(--divider-color);
@@ -394,9 +370,6 @@
 .onb-pt-3 {
     padding-top: 0.75rem;
 }
-.onb-align-baseline {
-    vertical-align: baseline;
-}
 .onb-align-middle {
     vertical-align: middle;
 }
@@ -470,9 +443,6 @@
 .onb-text-white {
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-.onb-outline {
-    outline-style: solid;
 }
 .onb-transition-all {
     transition-property: all;
@@ -552,10 +522,50 @@
     border-right: 5px solid rgba(255, 255, 255, 0);
     cursor: col-resize;
   }
+
+/* .internal-embed::after {
+  content: "open in default app";
+  display: block;
+  margin-top: 5px;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  padding: 5px 10px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid var(--background-modifier-border-hover);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+}
+
+.pdf-container,
+.pdf-toolbar {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+}
+
+.pdf-container {
+  border-top: 0px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.pdf-toolbar {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.internal-embed.pdf-embed {
+  border: none;
+}
+
+.internal-embed {
+  margin-bottom: 24px;
+} */
+
 .hover\:onb-bg-\[\#F2F2F2\]:hover {
     --tw-bg-opacity: 1;
     background-color: rgb(242 242 242 / var(--tw-bg-opacity));
 }
+
 .hover\:onb-bg-\[--background-secondary\]:hover {
     background-color: var(--background-secondary);
 }
