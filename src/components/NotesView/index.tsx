@@ -58,7 +58,7 @@ export function NotesView() {
       let attachments: TFile[] = [];
       function getAttachmentFileRecursively(folder: TFolder) {
         const children = folder.children;
-        
+
         if (children.length === 0) return;
         attachments = attachments.concat(
           children.filter((file) => file instanceof TFile)
@@ -90,7 +90,7 @@ export function NotesView() {
   }, [files, forceNotesViewUpdate]);
 
   return (
-    <div className="onb-flex onb-flex-col onb-bg-white onb-h-full onb-w-full  onb-flex-grow">
+    <div className="onb-flex onb-flex-col onb-bg-[color:--onb-note-view-background-color] onb-h-full onb-w-full  onb-flex-grow">
       <NotesViewToolbar />
 
       <div className="onb-w-full onb-h-full onb-py-2 onb-pl-2 onb-gap-2 custom-scrollbar">
@@ -103,7 +103,7 @@ export function NotesView() {
         )}
 
         {notes.length === 0 && (
-          <div className="onb-w-full onb-h-full onb-flex onb-items-center  onb-justify-center onb-text-gray-400">
+          <div className="onb-w-full onb-h-full onb-flex onb-items-center  onb-justify-center onb-text-[color:var(--onb-no-note-text-color)]">
             No Notes
           </div>
         )}

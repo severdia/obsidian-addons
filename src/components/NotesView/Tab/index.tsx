@@ -13,13 +13,13 @@ export const Tab = (props: TabProps) => {
 
   const styleClasses =
     notesViewType === props.tabId
-      ? "onb-bg-[#F2F2F2] onb-text-[#494a49]"
-      : "onb-text-[#757575]";
+      ? "onb-bg-[var(--onb-tab-background-color)] onb-text-[color:var(--onb-selected-tab-text-color)]"
+      : "onb-text-[color:var(--onb-tab-text-color)]";
   const { tabId, ...divProps } = props;
 
   return (
     <div
-      className={`onb-px-4 ${styleClasses} onb-py-4 onb-rounded-md hover:onb-bg-[#F2F2F2] onb-h-5 onb-flex onb-items-center onb-justify-center onb-cursor-pointer`}
+      className={`onb-px-4 ${styleClasses} onb-py-4 onb-rounded-md hover:onb-bg-[var(--onb-tab-background-hover-color)] onb-h-5 onb-flex onb-items-center onb-justify-center onb-cursor-pointer`}
       onClick={() => tabId && setNotesViewType(tabId)}
       {...divProps}
     >

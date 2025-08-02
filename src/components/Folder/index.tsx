@@ -56,19 +56,19 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
   const isActive = currentActiveFolderPath === props.folder.path;
   const activeBackgroundColor = isActive
     ? isFolderFocused
-      ? "onb-bg-[--onb-folder-background-active] !onb-text-white"
+      ? "onb-bg-[--onb-folder-background-active] !onb-text-[color:--onb-folder-unfocused-text-color]"
       : "onb-bg-[--onb-folder-focused-background] onb-text-[color:--onb-folder-focused-text-color]"
     : "";
 
   const folderCountClasses = isActive
     ? isFolderFocused
-      ? "onb-text-white"
+      ? "onb-text-[color:--onb-folder-unfocused-text-color]"
       : "onb-text-[color:--onb-folder-focused-text-color]"
     : "onb-text-[color:--onb-folder-text-color]";
 
   const folderStyleClasses = isActive
     ? isFolderFocused
-      ? "onb-text-white"
+      ? "onb-text-[color:--onb-folder-unfocused-text-color]"
       : "onb-text-[color:--onb-folder-icon-color]"
     : "onb-text-[color:--onb-folder-icon-color]";
 
@@ -330,9 +330,9 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
                       className={
                         isActive
                           ? isFolderFocused
-                            ? "onb-text-white"
+                            ? "onb-text-[color:--onb-folder-unfocused-text-color]"
                             : "onb-text-[color:--onb-folder-focused-text-color]"
-                          : "onb-text-[#616064]"
+                          : "onb-text-[color:--onb-folder-text-deactive]"
                       }
                     />
                   )}

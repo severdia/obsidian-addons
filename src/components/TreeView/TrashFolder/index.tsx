@@ -23,15 +23,15 @@ export const TrashFolder = memo(() => {
 
   const isActive = currentActiveFolderPath === TRASH_ROOT;
   const activeBackgroundColor = isActive
-    ? "onb-bg-[--onb-folder-background-active] !onb-text-white"
+    ? "onb-bg-[--onb-folder-background-active] !onb-text-[color:--onb-folder-text-active]"
     : "";
 
   const iconClasses = isActive
-    ? "onb-text-white"
+    ? "onb-text-[color:--onb-folder-text-active]"
     : "onb-text-[color:--onb-folder-icon-color]";
 
   const countClasses = isActive
-    ? "onb-text-white"
+    ? "onb-text-[color:--onb-folder-text-active]"
     : "onb-text-[color:--onb-folder-text-color]";
 
   const listDeletedFilesRecursively = async (

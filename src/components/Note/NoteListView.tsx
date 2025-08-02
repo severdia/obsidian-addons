@@ -14,20 +14,20 @@ export const NoteListView = memo(
   }: NoteCommonProps) => {
     const isFolderFocused = useStore((state) => state.isFolderFocused);
     const titleClasses =
-      isSelected && !isFolderFocused ? "onb-text-white" : "onb-text-black";
+      isSelected && !isFolderFocused ? "onb-text-[color:--onb-note-title-selected-folder-selected]" : "onb-text-[color:--onb-note-title]";
     const descriptionClasses =
       isSelected && !isFolderFocused
-        ? "onb-text-white"
+        ? "onb-text-[color:--onb-note-title]"
         : "onb-text-[color:--onb-note-text-description-color]";
     const timeClasses =
       isSelected && !isFolderFocused
-        ? "onb-text-white"
+        ? "onb-text-[color:--onb-note-title]"
         : "onb-text-[color:--onb-note-text-date-color]";
 
     const badgeBorderClasses =
       "onb-border-[1px] onb-border-solid " +
       (isSelected && !isFolderFocused
-        ? "onb-border-white"
+        ? "onb-text-[color:--onb-note-title]"
         : "onb-border-transparent");
 
     return (
@@ -57,7 +57,7 @@ export const NoteListView = memo(
           </div>
           {extension && extension !== "md" && (
             <div
-              className={`onb-bg-[var(--apple-notes-blue)] onb-box-border onb-inline-block ${badgeBorderClasses} onb-align-middle onb-text-white onb-rounded-full onb-text-[length:--onb-note-text-badge-size] onb-w-fit onb-px-1`}
+              className={`onb-bg-[var(--apple-notes-blue)] onb-box-border onb-inline-block ${badgeBorderClasses} onb-align-middle onb-text-[color:--onb-badge-text-color] onb-rounded-full onb-text-[length:--onb-note-text-badge-size] onb-w-fit onb-px-1`}
             >
               {extension.toUpperCase()}
             </div>

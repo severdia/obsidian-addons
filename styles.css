@@ -256,20 +256,8 @@
 .onb-border-transparent {
     border-color: transparent;
 }
-.onb-border-white {
-    --tw-border-opacity: 1;
-    border-color: rgb(255 255 255 / var(--tw-border-opacity));
-}
 .onb-border-b-\[var\(--divider-color\)\] {
     border-bottom-color: var(--divider-color);
-}
-.onb-bg-\[\#016efe\] {
-    --tw-bg-opacity: 1;
-    background-color: rgb(1 110 254 / var(--tw-bg-opacity));
-}
-.onb-bg-\[\#F2F2F2\] {
-    --tw-bg-opacity: 1;
-    background-color: rgb(242 242 242 / var(--tw-bg-opacity));
 }
 .onb-bg-\[--background-secondary\] {
     background-color: var(--background-secondary);
@@ -292,12 +280,20 @@
 .onb-bg-\[--onb-note-background-active\] {
     background-color: var(--onb-note-background-active);
 }
+.onb-bg-\[--onb-note-background-normal\] {
+    background-color: var(--onb-note-background-normal);
+}
+.onb-bg-\[--onb-selected-note-bg-color\] {
+    background-color: var(--onb-selected-note-bg-color);
+}
+.onb-bg-\[color\:--onb-note-view-background-color\] {
+    background-color: var(--onb-note-view-background-color);
+}
 .onb-bg-\[var\(--apple-notes-blue\)\] {
     background-color: var(--apple-notes-blue);
 }
-.onb-bg-white {
-    --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+.onb-bg-\[var\(--onb-tab-background-color\)\] {
+    background-color: var(--onb-tab-background-color);
 }
 .onb-object-cover {
     -o-object-fit: cover;
@@ -394,25 +390,14 @@
 .onb-font-semibold {
     font-weight: 600;
 }
-.\!onb-text-white {
-    --tw-text-opacity: 1 !important;
-    color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
+.\!onb-text-\[color\:--onb-folder-text-active\] {
+    color: var(--onb-folder-text-active) !important;
 }
-.onb-text-\[\#494a49\] {
-    --tw-text-opacity: 1;
-    color: rgb(73 74 73 / var(--tw-text-opacity));
+.\!onb-text-\[color\:--onb-folder-unfocused-text-color\] {
+    color: var(--onb-folder-unfocused-text-color) !important;
 }
-.onb-text-\[\#616064\] {
-    --tw-text-opacity: 1;
-    color: rgb(97 96 100 / var(--tw-text-opacity));
-}
-.onb-text-\[\#757575\] {
-    --tw-text-opacity: 1;
-    color: rgb(117 117 117 / var(--tw-text-opacity));
-}
-.onb-text-\[\#BFBFBF\] {
-    --tw-text-opacity: 1;
-    color: rgb(191 191 191 / var(--tw-text-opacity));
+.onb-text-\[color\:--onb-badge-text-color\] {
+    color: var(--onb-badge-text-color);
 }
 .onb-text-\[color\:--onb-folder-focused-text-color\] {
     color: var(--onb-folder-focused-text-color);
@@ -420,8 +405,17 @@
 .onb-text-\[color\:--onb-folder-icon-color\] {
     color: var(--onb-folder-icon-color);
 }
+.onb-text-\[color\:--onb-folder-text-active\] {
+    color: var(--onb-folder-text-active);
+}
 .onb-text-\[color\:--onb-folder-text-color\] {
     color: var(--onb-folder-text-color);
+}
+.onb-text-\[color\:--onb-folder-text-deactive\] {
+    color: var(--onb-folder-text-deactive);
+}
+.onb-text-\[color\:--onb-folder-unfocused-text-color\] {
+    color: var(--onb-folder-unfocused-text-color);
 }
 .onb-text-\[color\:--onb-note-text-date-color\] {
     color: var(--onb-note-text-date-color);
@@ -429,20 +423,32 @@
 .onb-text-\[color\:--onb-note-text-description-color\] {
     color: var(--onb-note-text-description-color);
 }
+.onb-text-\[color\:--onb-note-title-selected-folder-selected\] {
+    color: var(--onb-note-title-selected-folder-selected);
+}
+.onb-text-\[color\:--onb-note-title\] {
+    color: var(--onb-note-title);
+}
+.onb-text-\[color\:var\(--onb-no-note-text-color\)\] {
+    color: var(--onb-no-note-text-color);
+}
+.onb-text-\[color\:var\(--onb-selected-tab-text-color\)\] {
+    color: var(--onb-selected-tab-text-color);
+}
+.onb-text-\[color\:var\(--onb-tab-text-color\)\] {
+    color: var(--onb-tab-text-color);
+}
+.onb-text-\[color\:var\(--onb-toolbar-delete-icon-color\)\] {
+    color: var(--onb-toolbar-delete-icon-color);
+}
+.onb-text-\[color\:var\(--onb-toolbar-icon-color\)\] {
+    color: var(--onb-toolbar-icon-color);
+}
 .onb-text-\[var\(--List-color\)\] {
     color: var(--List-color);
 }
-.onb-text-black {
-    --tw-text-opacity: 1;
-    color: rgb(0 0 0 / var(--tw-text-opacity));
-}
-.onb-text-gray-400 {
-    --tw-text-opacity: 1;
-    color: rgb(156 163 175 / var(--tw-text-opacity));
-}
-.onb-text-white {
-    --tw-text-opacity: 1;
-    color: rgb(255 255 255 / var(--tw-text-opacity));
+.onb-text-\[var\(--onb-toolbar-icon-color\)\] {
+    color: var(--onb-toolbar-icon-color);
 }
 .onb-transition-all {
     transition-property: all;
@@ -455,51 +461,6 @@
 .onb-ease-in-out {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
-  :root {
-    /* Notes related variables */
-    /* --> Common */
-    --onb-note-background-active: #e5e7eb;
-    --onb-note-text-title-size: 14px;
-    --onb-note-text-description-size: 12px;
-    --onb-note-text-description-color: #808080;
-    --onb-note-text-date-color: #272727;
-
-    /* --> Grid View*/
-    --onb-note-grid-width: 365px;
-    --onb-note-grid-height: 300px;
-    --onb-note-grid-border-color: #eaeaea;
-    --onb-note-grid-thumbnail-height: 148px;
-
-    /* Divider related variables */
-    --onb-divider-background: #e6e6e6;
-    --onb-divider-padding-x: 12px;
-    --onb-divider-height: 1px;
-
-    /* Folder related variables */
-    --onb-folder-background-active: #6aa0f9;
-    --onb-folder-focused-background: #d4d4d4;
-    --onb-folder-focused-text-color: #000000;
-    --onb-folder-background-hover: #c7c6ca;
-    --onb-folder-text-size: 14px;
-    --onb-folder-text-color: #9f9ea4;
-    --onb-folder-icon-color: #006ef6;
-
-    /*Filesystem related variables*/
-    --onb-filesystem-background-color: #e6e5e8;
-
-    /* Scrollbar variables*/
-    /*  --scrolbar: #e0dee4; */
-    --scrollbar-thumb: #afaeb2;
-    --scrollbar-thumb-hover: #727174;
-    --scrollbar-files: #fafafa;
-    --scrollbar-files-thumb: #c2c2c2;
-    --scrollbar-files-thumb-hover: #7d7d7d;
-
-    /* file extension background color */
-    --apple-notes-blue: #006ef5;
-    --onb-note-text-badge-size: 12px;
-  }
-
   .custom-scrollbar::-webkit-scrollbar {
     background-color: var(--onb-filesystem-background-color) !important;
     width: 8px;
@@ -523,49 +484,148 @@
     cursor: col-resize;
   }
 
-/* .internal-embed::after {
-  content: "open in default app";
-  display: block;
-  margin-top: 5px;
-  background: var(--background-secondary);
-  color: var(--text-normal);
-  padding: 5px 10px;
-  font-size: 14px;
-  text-align: center;
-  border: 1px solid var(--background-modifier-border-hover);
-  border-radius: var(--radius-m);
-  cursor: pointer;
+.theme-light {
+  /* Notes related variables */
+  /* --> Common */
+  --onb-note-background-active: #e5e7eb;
+  --onb-note-text-title-size: 14px;
+  --onb-note-text-description-size: 12px;
+  --onb-note-text-description-color: #808080;
+  --onb-note-text-date-color: #272727;
+  --onb-note-view-background-color: white;
+  --onb-no-note-text-color: #9ca3af;
+  --onb-folder-text-active: white;
+  --onb-folder-text-deactive: #616064;
+
+  /* --> Grid View*/
+  --onb-note-grid-width: 365px;
+  --onb-note-grid-height: 300px;
+  --onb-note-grid-border-color: #eaeaea;
+  --onb-note-grid-thumbnail-height: 148px;
+  --onb-note-title-selected: white;
+  --onb-note-title: black;
+
+  /* Divider related variables */
+  --onb-divider-background: #e6e6e6;
+  --onb-divider-padding-x: 12px;
+  --onb-divider-height: 1px;
+
+  /* Folder related variables */
+  --onb-folder-background-active: #6aa0f9;
+  --onb-folder-focused-background: #d4d4d4;
+  --onb-folder-focused-text-color: #000000;
+  --onb-folder-unfocused-text-color: white;
+  --onb-folder-background-hover: #c7c6ca;
+  --onb-folder-text-size: 14px;
+  --onb-folder-text-color: #9f9ea4;
+  --onb-folder-icon-color: #006ef6;
+  --onb-note-background-normal: white;
+  --onb-badge-text-color: white;
+
+  --onb-toolbar-icon-color: #757575;
+  --onb-toolbar-icon-bg-hover-color: #f2f2f2;
+  --onb-toolbar-delete-icon-color: #bfbfbf;
+  --onb-toolbar-delete-hover-bg-color: #f2f2f2;
+  --onb-selected-note-bg-color: #016efe;
+
+  /*Filesystem related variables*/
+  --onb-filesystem-background-color: #e6e5e8;
+
+  /* Scrollbar variables*/
+  /*  --scrolbar: #e0dee4; */
+  --scrollbar-thumb: #afaeb2;
+  --scrollbar-thumb-hover: #727174;
+  --scrollbar-files: #fafafa;
+  --scrollbar-files-thumb: #c2c2c2;
+  --scrollbar-files-thumb-hover: #7d7d7d;
+
+  /* file extension background color */
+  --apple-notes-blue: #006ef5;
+  --onb-note-text-badge-size: 12px;
+
+  --onb-tab-background-color: #f2f2f2;
+  --onb-tab-background-hover-color: #f2f2f2;
+  --onb-tab-text-color: #757575;
+  --onb-selected-tab-text-color: #494a49;
 }
 
-.pdf-container,
-.pdf-toolbar {
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-s);
-}
+.theme-dark {
+  /* Notes related variables */
+  /* --> Common */
+  --onb-note-background-active: #2e2f31;
+  --onb-note-text-title-size: 14px;
+  --onb-note-text-description-size: 12px;
+  --onb-note-text-description-color: #a0a0a0;
+  --onb-note-text-date-color: #cfcfcf;
+  --onb-note-view-background-color: #1e1f21;
+  --onb-no-note-text-color: #a1a1aa;
+  --onb-folder-text-active: #ffffff;
+  --onb-folder-text-deactive: #9ca3af;
 
-.pdf-container {
-  border-top: 0px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-}
+  /* --> Grid View */
+  --onb-note-grid-width: 365px;
+  --onb-note-grid-height: 300px;
+  --onb-note-grid-border-color: #3c3c3f;
+  --onb-note-grid-thumbnail-height: 148px;
+  --onb-note-title-selected: #ffffff;
+  --onb-note-title: #e0e0e0;
 
-.pdf-toolbar {
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-}
-.internal-embed.pdf-embed {
-  border: none;
-}
+  /* Divider related variables */
+  --onb-divider-background: #3a3a3a;
+  --onb-divider-padding-x: 12px;
+  --onb-divider-height: 1px;
 
-.internal-embed {
-  margin-bottom: 24px;
-} */
+  /* Folder related variables */
+  --onb-folder-background-active: #3b82f6;
+  --onb-folder-focused-background: #3c3c3c;
+  --onb-folder-focused-text-color: #ffffff;
+  --onb-folder-unfocused-text-color: #d4d4d4;
+  --onb-folder-background-hover: #4a4a4a;
+  --onb-folder-text-size: 14px;
+  --onb-folder-text-color: #b0b0b5;
+  --onb-folder-icon-color: #66aaff;
+  --onb-note-background-normal: #26272a;
+  --onb-badge-text-color: #ffffff;
 
-.hover\:onb-bg-\[\#F2F2F2\]:hover {
-    --tw-bg-opacity: 1;
-    background-color: rgb(242 242 242 / var(--tw-bg-opacity));
+  --onb-toolbar-icon-color: #a3a3a3;
+  --onb-toolbar-icon-bg-hover-color: #333333;
+  --onb-toolbar-delete-icon-color: #999999;
+  --onb-toolbar-delete-hover-bg-color: #404040;
+  --onb-selected-note-bg-color: #1d4ed8;
+
+  /* Filesystem related variables */
+  --onb-filesystem-background-color: #242526;
+
+  /* Scrollbar variables */
+  --scrollbar-thumb: #4e4e50;
+  --scrollbar-thumb-hover: #707072;
+  --scrollbar-files: #1e1e1e;
+  --scrollbar-files-thumb: #5a5a5a;
+  --scrollbar-files-thumb-hover: #8e8e8e;
+
+  /* file extension background color */
+  --apple-notes-blue: #3b82f6;
+  --onb-note-text-badge-size: 12px;
+
+  /* Tab related */
+  --onb-tab-background-color: #2b2b2b;
+  --onb-tab-background-hover-color: #3a3a3a;
+  --onb-tab-text-color: #a0a0a0;
+  --onb-selected-tab-text-color: #f0f0f0;
 }
 
 .hover\:onb-bg-\[--background-secondary\]:hover {
     background-color: var(--background-secondary);
+}
+
+.hover\:onb-bg-\[--onb-toolbar-delete-hover-bg-color\]:hover {
+    background-color: var(--onb-toolbar-delete-hover-bg-color);
+}
+
+.hover\:onb-bg-\[--onb-toolbar-icon-bg-hover-color\]:hover {
+    background-color: var(--onb-toolbar-icon-bg-hover-color);
+}
+
+.hover\:onb-bg-\[var\(--onb-tab-background-hover-color\)\]:hover {
+    background-color: var(--onb-tab-background-hover-color);
 }

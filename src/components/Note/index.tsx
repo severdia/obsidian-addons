@@ -57,18 +57,18 @@ export const Note = memo(({ file, isFirst }: NoteProps) => {
   const isAttachmentFolder = file.isAttachment;
 
   const backgroundListColorClass = (() => {
-    if (!isSelected) return "onb-bg-white";
+    if (!isSelected) return "onb-bg-[--onb-note-background-normal]";
 
     if (isFolderFocused) {
       return "onb-bg-[--onb-note-background-active] onb-rounded-md onb-z-10";
     }
 
-    return "onb-bg-[#016efe] onb-rounded-md onb-z-10";
+    return "onb-bg-[--onb-selected-note-bg-color] onb-rounded-md onb-z-10";
   })();
 
   const backgroundGridColorClass = isSelected
     ? "onb-bg-[--onb-note-background-active] onb-rounded-md onb-z-10"
-    : "onb-bg-white";
+    : "onb-bg-[--onb-note-background-normal]";
 
   const seperatorClasses = isSelected
     ? ""

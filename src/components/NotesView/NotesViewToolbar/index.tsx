@@ -60,7 +60,7 @@ export const NotesViewToolbar = memo((props: React.ComponentProps<"div">) => {
       </div>
       <div className="onb-flex onb-w-fit onb-flex-row onb-gap-1 onb-items-center onb-justify-between">
         <div
-          className="onb-px-3 onb-py-4 onb-text-[#757575] onb-rounded-md hover:onb-bg-[#F2F2F2] onb-h-5 onb-flex onb-items-center onb-justify-center onb-cursor-pointer"
+          className="onb-px-3 onb-py-4 onb-text-[color:var(--onb-toolbar-icon-color)] onb-rounded-md hover:onb-bg-[--onb-toolbar-icon-bg-hover-color] onb-h-5 onb-flex onb-items-center onb-justify-center onb-cursor-pointer"
           onClick={handleNewNote}
         >
           <Pencil style={{ transform: "scale(1.75)" }} />
@@ -68,9 +68,9 @@ export const NotesViewToolbar = memo((props: React.ComponentProps<"div">) => {
         <div
           className={`onb-px-3 onb-py-4 ${
             isFolderFocused
-              ? "onb-text-[#BFBFBF] onb-cursor-not-allowed"
-              : "onb-text-[#757575] onb-cursor-pointer"
-          } onb-rounded-md hover:onb-bg-[#F2F2F2] onb-h-5 onb-flex onb-items-center onb-justify-center`}
+              ? "onb-text-[color:var(--onb-toolbar-delete-icon-color)] onb-cursor-not-allowed"
+              : "onb-text-[var(--onb-toolbar-icon-color)] onb-cursor-pointer"
+          } onb-rounded-md hover:onb-bg-[--onb-toolbar-delete-hover-bg-color] onb-h-5 onb-flex onb-items-center onb-justify-center`}
           onClick={handleDelete}
         >
           <Trash style={{ transform: "scale(1.75)" }} />
