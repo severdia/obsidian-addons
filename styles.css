@@ -289,6 +289,10 @@
 .onb-bg-\[color\:--onb-note-view-background-color\] {
     background-color: var(--onb-note-view-background-color);
 }
+.onb-text-\[color\:--onb-note-title-selected-folder-selected\],
+.onb-bg-\[--onb-selected-note-bg-color\] .onb-text-\[length\:--onb-note-text-description-size\] {
+    color: var(--onb-selected-note-text-color);
+}
 .onb-bg-\[var\(--apple-notes-blue\)\] {
     background-color: var(--apple-notes-blue);
 }
@@ -527,6 +531,7 @@
   --onb-toolbar-delete-icon-color: #bfbfbf;
   --onb-toolbar-delete-hover-bg-color: #f2f2f2;
   --onb-selected-note-bg-color: #016efe;
+  --onb-selected-note-text-color: #ffffff;
 
   /*Filesystem related variables*/
   --onb-filesystem-background-color: #e6e5e8;
@@ -592,7 +597,9 @@
   --onb-toolbar-delete-icon-color: #999999;
   --onb-toolbar-delete-hover-bg-color: #404040;
   --onb-selected-note-bg-color: #1d4ed8;
-
+  
+  --onb-note-title-selected-folder-selected: #ffffff;
+  
   /* Filesystem related variables */
   --onb-filesystem-background-color: #242526;
 
