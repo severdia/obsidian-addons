@@ -532,6 +532,7 @@
   --onb-toolbar-delete-hover-bg-color: #f2f2f2;
   --onb-selected-note-bg-color: #016efe;
   --onb-selected-note-text-color: #ffffff;
+  --onb-note-title-selected-folder-selected: #ffffff;
 
   /*Filesystem related variables*/
   --onb-filesystem-background-color: #e6e5e8;
@@ -598,7 +599,6 @@
   --onb-toolbar-delete-hover-bg-color: #404040;
   --onb-selected-note-bg-color: #1d4ed8;
   
-  --onb-note-title-selected-folder-selected: #ffffff;
   
   /* Filesystem related variables */
   --onb-filesystem-background-color: #242526;
