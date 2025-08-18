@@ -32,7 +32,7 @@ export function NotesView() {
   )!;
 
   const isAttachmentFolder =
-    currentActiveFolderAbstractFile.name === attachementFolderName;
+    currentActiveFolderAbstractFile?.name === attachementFolderName;
 
   const sortNotes = (fileA: TFile, fileB: TFile): number => {
     const order = sortOrder === "descending" ? -1 : 1;
