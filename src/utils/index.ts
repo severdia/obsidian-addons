@@ -79,33 +79,38 @@ export function getLastModified(note: TFile) {
 }
 
 export const extractImageLink = (text: string) => {
-  const localImageRegex = /!\[\[(.*?\.(png|jpg|jpeg|gif|bmp|svg|webp))\]\]/i;
+  // Matches Obsidian-style local images: ![[file.png]]
+  const localImageRegex = /!\[\[(.*?\.(?:png|jpg|jpeg|gif|bmp|svg|webp))\]\]/i;
+
+  // Matches Markdown images: ![alt](url.png)
+  // Also matches images wrapped in a link: [![alt](url.png)](link)
   const remoteImageRegex =
-    /!\[.*?\]\((https?:\/\/[^\s)]+\.(png|jpg|jpeg|gif|bmp|svg|webp)(\?.*?)?|[^\s)]+\.(png|jpg|jpeg|gif|bmp|svg|webp))\)/i;
+    /!\[.*?\]\(([^)\s]+\.(?:png|jpg|jpeg|gif|bmp|svg|webp)(?:\?[^\s)]*)?)\)/i;
 
-  const firstLocalExtractedImage = RegExp(localImageRegex).exec(text);
-  const firstRemoteExtractedImage = RegExp(remoteImageRegex).exec(text);
+  // Special case: image wrapped inside link [![alt](image.png)](link)
+  const wrappedImageRegex =
+    /\[!\[.*?\]\((.*?\.(?:png|jpg|jpeg|gif|bmp|svg|webp)(?:\?[^\s)]*)?)\)\]/i;
 
-  if (!firstLocalExtractedImage && !firstRemoteExtractedImage) {
-    return null;
+  const wrappedMatch = wrappedImageRegex.exec(text);
+  if (wrappedMatch) return wrappedMatch[1];
+
+  const localMatch = localImageRegex.exec(text);
+  const remoteMatch = remoteImageRegex.exec(text);
+
+  if (!localMatch && !remoteMatch) return null;
+
+  if (
+    (!localMatch && remoteMatch) ||
+    (localMatch && remoteMatch && localMatch.index > remoteMatch.index)
+  ) {
+    return remoteMatch[1];
   }
 
   if (
-    (!firstLocalExtractedImage && firstRemoteExtractedImage) ||
-    (firstLocalExtractedImage &&
-      firstRemoteExtractedImage &&
-      firstLocalExtractedImage.index > firstRemoteExtractedImage.index)
+    (localMatch && !remoteMatch) ||
+    (localMatch && remoteMatch && localMatch.index < remoteMatch.index)
   ) {
-    return firstRemoteExtractedImage[1];
-  }
-
-  if (
-    (firstLocalExtractedImage && !firstRemoteExtractedImage) ||
-    (firstLocalExtractedImage &&
-      firstRemoteExtractedImage &&
-      firstLocalExtractedImage.index < firstRemoteExtractedImage.index)
-  ) {
-    return firstLocalExtractedImage[1];
+    return localMatch[1];
   }
 
   return null;
