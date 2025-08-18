@@ -86,9 +86,6 @@
 .onb-h-full {
     height: 100%;
 }
-.onb-max-h-0 {
-    max-height: 0px;
-}
 .onb-min-h-6 {
     min-height: 1.5rem;
 }
@@ -127,17 +124,6 @@
 }
 .onb-flex-grow {
     flex-grow: 1;
-}
-.-onb-translate-y-2 {
-    --tw-translate-y: -0.5rem;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-.onb-translate-y-0 {
-    --tw-translate-y: 0px;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-.onb-transform {
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .onb-cursor-not-allowed {
     cursor: not-allowed;
@@ -427,8 +413,8 @@
 .onb-text-\[color\:--onb-note-text-description-color\] {
     color: var(--onb-note-text-description-color);
 }
-.onb-text-\[color\:--onb-note-title-selected-folder-selected\] {
-    color: var(--onb-note-title-selected-folder-selected);
+.onb-text-\[color\:--onb-note-title-selected\] {
+    color: var(--onb-note-title-selected);
 }
 .onb-text-\[color\:--onb-note-title\] {
     color: var(--onb-note-title);
@@ -454,13 +440,18 @@
 .onb-text-\[var\(--onb-toolbar-icon-color\)\] {
     color: var(--onb-toolbar-icon-color);
 }
+.onb-transition-\[max-height\] {
+    transition-property: max-height;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
 .onb-transition-all {
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
 }
-.onb-duration-\[1000ms\] {
-    transition-duration: 1000ms;
+.onb-duration-500 {
+    transition-duration: 500ms;
 }
 .onb-ease-in-out {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

@@ -14,14 +14,14 @@ export const NoteListView = memo(
   }: NoteCommonProps) => {
     const isFolderFocused = useStore((state) => state.isFolderFocused);
     const titleClasses =
-      isSelected && !isFolderFocused ? "onb-text-[color:--onb-note-title-selected-folder-selected]" : "onb-text-[color:--onb-note-title]";
+      isSelected && !isFolderFocused ? "onb-text-[color:--onb-note-title-selected]" : "onb-text-[color:--onb-note-title]";
     const descriptionClasses =
       isSelected && !isFolderFocused
-        ? "onb-text-[color:--onb-note-title]"
+        ? "onb-text-[color:--onb-note-title-selected]"
         : "onb-text-[color:--onb-note-text-description-color]";
     const timeClasses =
       isSelected && !isFolderFocused
-        ? "onb-text-[color:--onb-note-title]"
+        ? "onb-text-[color:--onb-note-title-selected]"
         : "onb-text-[color:--onb-note-text-date-color]";
 
     const badgeBorderClasses =

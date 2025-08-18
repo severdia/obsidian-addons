@@ -1,6 +1,6 @@
 import { Folder } from "components/Folder";
 import { TFolder } from "obsidian";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { toBoolean, sortFoldersAlphabetically } from "utils";
 import { useStore } from "store";
 
@@ -15,17 +15,28 @@ export function Filesystem(props: Readonly<FilesystemProps>) {
   const setCurrentActiveFolderPath = useStore(
     (state) => state.setCurrentActiveFolderPath
   );
+
   const [isOpen, setIsOpen] = useState<boolean>(
     toBoolean(localStorage.getItem(folder.path))
   );
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [maxHeight, setMaxHeight] = useState<string>("0px");
 
   const showSubfolders = useCallback(
     (folder: TFolder) => {
-      localStorage.setItem(folder.path, `${!isOpen}`);
-      setIsOpen(!isOpen);
+      const newIsOpen = !isOpen;
+      localStorage.setItem(folder.path, `${newIsOpen}`);
+      setIsOpen(newIsOpen);
     },
     [isOpen]
   );
+
+  // Adjust max-height dynamically based on content height
+  useEffect(() => {
+    if (contentRef.current) {
+      setMaxHeight(isOpen ? `${contentRef.current.scrollHeight}px` : "0px");
+    }
+  }, [isOpen, folder.children.length]);
 
   return (
     <li key={folder.path} className="onb-list-none onb-w-full custom-scrollbar">
@@ -42,77 +53,19 @@ export function Filesystem(props: Readonly<FilesystemProps>) {
       )}
 
       <div
-        className={`onb-transition-all onb-duration-[1000ms] onb-ease-in-out onb-overflow-hidden onb-transform ${
-          isOpen
-            ? "onb-translate-y-0"
-            : "onb-max-h-0 -onb-translate-y-2"
-        }`}
-      >
-        {isOpen && (
-          <ul className="onb-pl-2 onb-list-none onb-m-0">
-            {sortFoldersAlphabetically(folder.children).map(
-              (child) =>
-                child instanceof TFolder && (
-                  <Filesystem folder={child} key={child.path} />
-                )
-            )}
-          </ul>
-        )}
-      </div>
-    </li>
-  );
-}
-
-/*
-
-import { Folder } from "components/Folder";
-import { TFolder } from "obsidian";
-import { useState, useCallback } from "react";
-import { toBoolean, sortFilesAlphabetically } from "utils";
-import { useStore } from "store";
-
-interface FilesystemProps {
-  folder: TFolder;
-}
-
-export function Filesystem(props: Readonly<FilesystemProps>) {
-  const { folder } = props;
-  const setIsFolderFocused = useStore((state) => state.setIsFolderFocused);
-  const setCurrentActiveFolderPath = useStore(
-    (state) => state.setCurrentActiveFolderPath
-  );
-  const [isOpen, setIsOpen] = useState<boolean>(
-    toBoolean(localStorage.getItem(folder.path))
-  );
-
-  const showSubfolders = useCallback(
-    (folder: TFolder) => {
-      localStorage.setItem(folder.path, `${!isOpen}`);
-      setIsOpen(!isOpen);
-    },
-    [isOpen]
-  );
-
-  return (
-    <li key={folder.path} className="onb-list-none onb-w-full custom-scrollbar">
-      <Folder
-        folder={folder}
-        onClickChevron={() => showSubfolders(folder)}
-        isOpen={isOpen}
-        onClickFolder={() => {
-          console.log("clicked folder : " + folder.path);
-          setIsFolderFocused(true);
-          setCurrentActiveFolderPath(folder.path);
+        ref={contentRef}
+        className={`onb-transition-[max-height] onb-duration-500 onb-ease-in-out onb-overflow-hidden`}
+        style={{
+          maxHeight,
         }}
-      />
-
-      <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-        }`}
       >
-        <ul className="onb-pl-2 onb-list-none onb-m-0">
-          {sortFilesAlphabetically(folder.children).map(
+        <ul
+          className="onb-pl-2 onb-list-none onb-m-0 onb-transition-all onb-duration-500 onb-ease-in-out onb-overflow-hidden"
+          style={{
+            transform: isOpen ? "translateY(0)" : "translateY(-100%)",
+          }}
+        >
+          {sortFoldersAlphabetically(folder.children).map(
             (child) =>
               child instanceof TFolder && (
                 <Filesystem folder={child} key={child.path} />
@@ -123,5 +76,3 @@ export function Filesystem(props: Readonly<FilesystemProps>) {
     </li>
   );
 }
-
-*/
