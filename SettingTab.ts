@@ -1,7 +1,6 @@
 import { useStore } from "store";
 import NotesBrowser from "./main";
 import { App, PluginSettingTab, Setting } from "obsidian";
-import { openInDefaultIndicatorStyle } from "./src/constants";
 
 export class SettingTab extends PluginSettingTab {
   plugin: NotesBrowser;

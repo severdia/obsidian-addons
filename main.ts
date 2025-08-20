@@ -12,6 +12,7 @@ import { shell } from "electron";
 import * as path from "path";
 import { pathToFileURL } from "url";
 import { openInDefaultIndicatorStyle } from "./src/constants";
+import { Platform } from "obsidian";
 
 interface NotesBrowserSettings {
   isDraggingFilesAndFoldersdisabled: boolean;
@@ -52,12 +53,13 @@ export default class NotesBrowser extends Plugin {
         this.activateView();
       }
     });
- 
+
     this.app.workspace.on("active-leaf-change", this.onActiveLeafChange);
     this.app.vault.on("create", this.onCreate);
     this.app.vault.on("delete", this.onDelete);
     this.app.vault.on("rename", this.onRename);
     this.app.vault.on("modify", this.onModify);
+
     this.registerImageDblClick();
     if (this.settings.openInDefaultAppButton) {
       this.addGlobalStyle();
@@ -164,7 +166,8 @@ export default class NotesBrowser extends Plugin {
     const afterBottom = rect.bottom;
 
     const clickX = event.clientX;
-    const afterLeft = rect.left;
+    const LINK_ICON_SIZE = 30;
+    const afterLeft = rect.left + rect.width - LINK_ICON_SIZE; // here we handle the left space before the link
     const afterRight = rect.right;
 
     const isInAfter =
@@ -173,7 +176,6 @@ export default class NotesBrowser extends Plugin {
       clickX >= afterLeft &&
       clickX <= afterRight;
 
-    console.log(isInAfter);
     return isInAfter ? embed : null;
   }
 
