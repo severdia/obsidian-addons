@@ -9,10 +9,9 @@ import { ReplaceNoteModal } from "components/CustomModals/ReplaceNoteModal";
 import { Chevron } from "components/Icons/Chevron";
 import { FolderOutline } from "components/Icons/FolderOutline";
 import { useApp, useDragHandlers, useObsidianConfig, usePlugin } from "hooks";
-import { TFolder, Notice, Menu, TFile, normalizePath } from "obsidian";
-import { useState, DragEventHandler, memo, useCallback } from "react";
+import { TFolder, Notice, Menu, normalizePath } from "obsidian";
+import { useState, DragEventHandler, memo, useEffect, useRef } from "react";
 import Dropzone from "react-dropzone";
-
 import { useStore } from "store";
 import {
   isContainFolders,
@@ -22,7 +21,7 @@ import {
 
 interface FolderProps {
   isOpen: boolean;
-  onClickChevron: () => void;
+  onClickChevron: (options?: { manualOpenState: boolean }) => void;
   onClickFolder: () => void;
   folder: TFolder;
   isAttachment?: boolean;
@@ -30,6 +29,9 @@ interface FolderProps {
 
 export const Folder = memo((props: Readonly<FolderProps>) => {
   const [isDropping, setIsDropping] = useState(false);
+  const dropTimeOut = useRef<NodeJS.Timeout | null>(null);
+  const dragCounter = useRef(0);
+
   const containsFolders = isContainFolders(props.folder);
   const app = useApp();
   const { settings } = usePlugin();
@@ -54,6 +56,7 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
 
   const isFolderFocused = useStore((state) => state.isFolderFocused);
   const isActive = currentActiveFolderPath === props.folder.path;
+
   const activeBackgroundColor = isActive
     ? isFolderFocused
       ? "onb-bg-[--onb-folder-background-active] !onb-text-[color:--onb-folder-unfocused-text-color]"
@@ -73,6 +76,7 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
     : "onb-text-[color:--onb-folder-icon-color]";
 
   const handleOnDropFiles = (droppabaleFiles: File[]) => {
+    console.log(droppabaleFiles);
     droppabaleFiles.map((file) => {
       file.arrayBuffer().then((content) => {
         app.vault.adapter.writeBinary(
@@ -271,8 +275,48 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
     folderMenu.showAtPosition({ x: e.pageX, y: e.pageY });
   };
 
-  const disableDroppingEffect = () => setIsDropping(false);
-  const enableDroppingEffect = () => setIsDropping(true);
+  const clearDropTimeout = () => {
+    if (dropTimeOut.current) {
+      clearTimeout(dropTimeOut.current);
+      dropTimeOut.current = null;
+    }
+  };
+
+  const enableDroppingEffect = () => {
+    clearDropTimeout();
+    setIsDropping(true);
+    if (!props.isOpen) return;
+    dropTimeOut.current = setTimeout(() => {
+      console.log("drag enter " + props.folder?.name);
+      props.onClickChevron();
+    }, 3000);
+  };
+
+  const disableDroppingEffect = () => {
+    clearDropTimeout();
+    setIsDropping(false);
+  };
+
+  const handleDragEnter: DragEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    dragCounter.current++;
+    if (dragCounter.current === 1) {
+      enableDroppingEffect();
+    }
+  };
+
+  const handleDragLeave: DragEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    dragCounter.current--;
+    if (dragCounter.current === 0) {
+      disableDroppingEffect();
+    }
+  };
+
+  // cleanup timeout on unmount
+  useEffect(() => {
+    return () => clearDropTimeout();
+  }, []);
 
   if (isAttachmentFolder && settings.hideAttachmentFolder) {
     return null;
@@ -280,12 +324,12 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
 
   return (
     <Dropzone
-      onDragOver={enableDroppingEffect}
-      onDragEnter={enableDroppingEffect}
       onDropAccepted={disableDroppingEffect}
       onDropRejected={disableDroppingEffect}
-      onDragLeave={disableDroppingEffect}
-      onDrop={handleOnDropFiles}
+      onDrop={(event) => {
+        handleOnDropFiles(event);
+        disableDroppingEffect();
+      }}
       noClick={true}
       noDrag={settings.isDraggingFilesAndFoldersdisabled}
     >
@@ -296,9 +340,9 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
               ? "onb-bg-[--onb-folder-background-hover]"
               : ""
           }`}
-          onDragOver={enableDroppingEffect}
-          onDragEnter={enableDroppingEffect}
-          onDragLeave={disableDroppingEffect}
+          onDragEnter={handleDragEnter}
+          onDragOver={(e) => e.preventDefault()}
+          onDragLeave={handleDragLeave}
           onDrop={onDrop}
           data-path={props.folder.path}
           draggable={!settings.isDraggingFilesAndFoldersdisabled}
@@ -322,7 +366,9 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
               {props.folder.children && containsFolders && (
                 <div
                   className="onb-size-6 onb-min-w-6 onb-flex onb-items-center onb-justify-center onb-min-h-6"
-                  onClick={props.onClickChevron}
+                  onClick={() => {
+                    props.onClickChevron();
+                  }}
                 >
                   {props.folder.children && (
                     <Chevron

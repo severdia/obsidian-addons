@@ -179,3 +179,7 @@
   --onb-tab-text-color: #a0a0a0;
   --onb-selected-tab-text-color: #f0f0f0;
 }
+
+:root {
+    interpolate-size: allow-keywords;
+}

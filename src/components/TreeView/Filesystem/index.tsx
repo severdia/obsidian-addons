@@ -12,38 +12,37 @@ interface FilesystemProps {
 export function Filesystem(props: Readonly<FilesystemProps>) {
   const { folder } = props;
   const setIsFolderFocused = useStore((state) => state.setIsFolderFocused);
-  const setCurrentActiveFolderPath = useStore(
-    (state) => state.setCurrentActiveFolderPath
-  );
+  const { setCurrentActiveFolderPath } = useStore((state) => ({
+    setCurrentActiveFolderPath: state.setCurrentActiveFolderPath,
+  }));
 
   const [isOpen, setIsOpen] = useState<boolean>(
     toBoolean(localStorage.getItem(folder.path))
   );
   const contentRef = useRef<HTMLDivElement>(null);
-  const [maxHeight, setMaxHeight] = useState<string>("0px");
 
-  const showSubfolders = useCallback(
-    (folder: TFolder) => {
-      const newIsOpen = !isOpen;
+  const onClickChevron = useCallback(
+    (options: { manualOpenState: boolean }) => {
+      let newIsOpen: boolean;
+
+      if (options) {
+        newIsOpen = options.manualOpenState;
+      } else {
+        newIsOpen = !isOpen;
+      }
+
       localStorage.setItem(folder.path, `${newIsOpen}`);
       setIsOpen(newIsOpen);
     },
     [isOpen]
   );
 
-  // Adjust max-height dynamically based on content height
-  useEffect(() => {
-    if (contentRef.current) {
-      setMaxHeight(isOpen ? `${contentRef.current.scrollHeight}px` : "0px");
-    }
-  }, [isOpen, folder.children.length]);
-
   return (
     <li key={folder.path} className="onb-list-none onb-w-full custom-scrollbar">
       {!props.isRoot && (
         <Folder
           folder={folder}
-          onClickChevron={() => showSubfolders(folder)}
+          onClickChevron={onClickChevron}
           isOpen={isOpen}
           onClickFolder={() => {
             setIsFolderFocused(true);
@@ -54,9 +53,9 @@ export function Filesystem(props: Readonly<FilesystemProps>) {
 
       <div
         ref={contentRef}
-        className={`onb-transition-[max-height] onb-duration-500 onb-ease-in-out onb-overflow-hidden`}
+        className={`onb-transition-[height] onb-duration-500 onb-ease-in-out onb-overflow-hidden onb-h-fit`}
         style={{
-          maxHeight,
+          height: isOpen ? "fit-content" : "0px",
         }}
       >
         <ul

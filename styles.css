@@ -446,6 +446,11 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
 }
+.onb-transition-\[height\] {
+    transition-property: height;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
 .onb-duration-500 {
     transition-duration: 500ms;
 }
@@ -603,6 +608,10 @@
   --onb-tab-background-hover-color: #3a3a3a;
   --onb-tab-text-color: #a0a0a0;
   --onb-selected-tab-text-color: #f0f0f0;
+}
+
+:root {
+    interpolate-size: allow-keywords;
 }
 
 .hover\:onb-bg-\[--background-secondary\]:hover {
