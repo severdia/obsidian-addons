@@ -285,10 +285,10 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
   const enableDroppingEffect = () => {
     clearDropTimeout();
     setIsDropping(true);
-    if (!props.isOpen) return;
+    if (props.isOpen) return;
     dropTimeOut.current = setTimeout(() => {
       console.log("drag enter " + props.folder?.name);
-      props.onClickChevron();
+      props.onClickChevron({manualOpenState: true});
     }, 3000);
   };
 

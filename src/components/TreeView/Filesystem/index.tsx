@@ -1,6 +1,6 @@
 import { Folder } from "components/Folder";
 import { TFolder } from "obsidian";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { toBoolean, sortFoldersAlphabetically } from "utils";
 import { useStore } from "store";
 
