@@ -269,6 +269,9 @@
 .onb-bg-\[--onb-note-background-normal\] {
     background-color: var(--onb-note-background-normal);
 }
+.onb-bg-\[--onb-note-keyboard-highlight\] {
+    background-color: var(--onb-note-keyboard-highlight);
+}
 .onb-bg-\[--onb-selected-note-bg-color\] {
     background-color: var(--onb-selected-note-bg-color);
 }
@@ -436,18 +439,13 @@
 .onb-text-\[var\(--onb-toolbar-icon-color\)\] {
     color: var(--onb-toolbar-icon-color);
 }
-.onb-transition-\[max-height\] {
-    transition-property: max-height;
+.onb-transition-\[height\] {
+    transition-property: height;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
 }
 .onb-transition-all {
     transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-}
-.onb-transition-\[height\] {
-    transition-property: height;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
 }
@@ -611,7 +609,8 @@
 }
 
 :root {
-    interpolate-size: allow-keywords;
+  interpolate-size: allow-keywords;
+  --onb-note-keyboard-highlight: #f5f5f5;
 }
 
 .hover\:onb-bg-\[--background-secondary\]:hover {

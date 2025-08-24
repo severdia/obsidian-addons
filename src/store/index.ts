@@ -1,5 +1,4 @@
-import { App, TFile, TFolder } from "obsidian";
-import { useObsidianConfig } from "hooks";
+import { App, TFile } from "obsidian";
 import { create } from "zustand";
 
 type NotesViewType = "LIST" | "GRID";
@@ -7,6 +6,8 @@ type NotesViewType = "LIST" | "GRID";
 interface State {
   notes: TFile[];
   app?: App;
+  currentNoteIndex: number | null;
+  currentSelectedNoteIndex: number | null;
   currentActiveFilePath: string;
   currentActiveFolderPath: string;
   forceFilesyetemUpdate: number;
@@ -23,14 +24,18 @@ interface State {
   ) => void;
   setForceFilesystemUpdate: () => void;
   setForceNotesViewUpdate: () => void;
+  setCurrentNoteIndex: (position: number) => void;
+  setCurrentSelectedNoteIndex: (position: number) => void;
 }
 
 export const useStore = create<State>()((set) => ({
   notes: [],
   forceFilesyetemUpdate: 0,
+  currentSelectedNoteIndex: null,
   notesViewType: "LIST",
   forceNotesViewUpdate: 0,
   isFolderFocused: true,
+  currentNoteIndex: null,
   setIsFolderFocused: (isFocused) =>
     set((state) => ({ ...state, isFolderFocused: isFocused })),
   setNotesViewType: (notesViewType) =>
@@ -71,4 +76,14 @@ export const useStore = create<State>()((set) => ({
         ),
       };
     }),
+  setCurrentNoteIndex: (position) => {
+    set((state) => {
+      return { ...state, currentNoteIndex: position };
+    });
+  },
+  setCurrentSelectedNoteIndex: (position) => {
+    set((state) => {
+      return { ...state, currentSelectedNoteIndex: position };
+    });
+  },
 }));

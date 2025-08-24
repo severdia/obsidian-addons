@@ -114,7 +114,7 @@ export const TrashFolder = memo(() => {
     const folderMenu = new Menu();
 
     folderMenu.addItem((menuItem) => {
-      menuItem.setTitle("Emty trash");
+      menuItem.setTitle("Empty trash");
       menuItem.setIcon("trash");
       menuItem.onClick(handleEmptyTrash);
     });
