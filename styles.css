@@ -269,9 +269,6 @@
 .onb-bg-\[--onb-note-background-normal\] {
     background-color: var(--onb-note-background-normal);
 }
-.onb-bg-\[--onb-note-keyboard-highlight\] {
-    background-color: var(--onb-note-keyboard-highlight);
-}
 .onb-bg-\[--onb-selected-note-bg-color\] {
     background-color: var(--onb-selected-note-bg-color);
 }

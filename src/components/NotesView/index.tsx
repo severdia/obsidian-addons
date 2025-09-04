@@ -2,6 +2,7 @@ import { useStore } from "store";
 import {
   KeyboardEventHandler,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -104,6 +105,20 @@ export function NotesView() {
 
   const listRef = useRef<List>(null);
 
+  useEffect(() => {
+    if (currentNoteIndex === null) return;
+
+    const currentKeyboardSelectedNote = document.querySelector(
+      `[note-position="${currentNoteIndex}"]`
+    );
+
+    if (!currentKeyboardSelectedNote) return;
+
+    const currentKeyboardSelectedNoteFilePath =
+      currentKeyboardSelectedNote.getAttribute("data-path")!;
+    openFile(currentKeyboardSelectedNoteFilePath);
+  }, [currentNoteIndex]);
+
   const openFile = useCallback((path: string) => {
     if (!app) return;
     const fileToOpen = app.vault.getAbstractFileByPath(path);
@@ -114,31 +129,39 @@ export function NotesView() {
       focus: false,
     });
 
-    leaf.openFile(fileToOpen as TFile, { eState: { focus: true } });
+    leaf.openFile(fileToOpen as TFile, { active: false });
+  }, []);
+
+  const openCurrentKeyboardSelectedNote = useCallback((noteIndex: number) => {
+    const currentKeyboardSelectedNote = document.querySelector(
+      `[note-position="${currentNoteIndex}"]`
+    );
+
+    console.log("[AYY] before detection");
+    if (!currentKeyboardSelectedNote) return;
+    console.log("[AYY] after detection");
+
+    const currentKeyboardSelectedNoteFilePath =
+      currentKeyboardSelectedNote.getAttribute("data-path")!;
+    openFile(currentKeyboardSelectedNoteFilePath);
   }, []);
 
   const navigateNotes: KeyboardEventHandler<HTMLDivElement> = (event) => {
-    if (currentNoteIndex === null) {
+    if (
+      currentNoteIndex === null ||
+      (event.key !== "ArrowDown" && event.key !== "ArrowUp")
+    ) {
       return;
     }
+
     if (event.key === "ArrowDown" && currentNoteIndex < notes.length - 1) {
-      setCurrentNoteIndex(currentNoteIndex + 1);
-      listRef.current?.scrollToRow(currentNoteIndex + 1);
+      const nextNoteIndex = currentNoteIndex + 1;
+      setCurrentNoteIndex(nextNoteIndex);
+      listRef.current?.scrollToRow(nextNoteIndex);
     } else if (event.key === "ArrowUp" && currentNoteIndex > 0) {
-      setCurrentNoteIndex(currentNoteIndex - 1);
-      listRef.current?.scrollToRow(currentNoteIndex - 1);
-    }
-
-    if (event.key === "Enter") {
-      console.log("enter was clicked");
-      const currentKeyboardSelectedNote = document.querySelector(
-        `[note-position="${currentNoteIndex}"]`
-      );
-      if (!currentKeyboardSelectedNote) return;
-
-      const currentKeyboardSelectedNoteFilePath =
-        currentKeyboardSelectedNote.getAttribute("data-path")!;
-      openFile(currentKeyboardSelectedNoteFilePath);
+      const previousNoteIndex = currentNoteIndex - 1;
+      setCurrentNoteIndex(previousNoteIndex);
+      listRef.current?.scrollToRow(previousNoteIndex);
     }
   };
 
@@ -156,11 +179,7 @@ export function NotesView() {
 
       <div className="onb-w-full onb-h-full onb-py-2 onb-pl-2 onb-gap-2 custom-scrollbar">
         {notes.length > 0 && notesViewType === "LIST" && (
-          <ListView
-            notes={notes}
-            listRef={listRef}
-            currentNoteIndex={currentNoteIndex}
-          />
+          <ListView notes={notes} listRef={listRef} />
         )}
 
         {notes.length > 0 && notesViewType === "GRID" && (

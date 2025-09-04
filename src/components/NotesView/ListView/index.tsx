@@ -5,11 +5,9 @@ import { AutoSizer, List, ListRowProps } from "react-virtualized";
 export const ListView = ({
   notes,
   listRef,
-  currentNoteIndex,
 }: {
   notes: TFile[];
   listRef: React.RefObject<List>;
-  currentNoteIndex: number | null;
 }) => {
   const RowRenderer = ({ index, style }: ListRowProps) => (
     <div
@@ -22,7 +20,6 @@ export const ListView = ({
         file={notes[index]}
         notePosition={index}
         isFirst={index === 0}
-        isKeyboardSelected={index === currentNoteIndex}
       />
     </div>
   );
