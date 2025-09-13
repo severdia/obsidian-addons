@@ -132,20 +132,6 @@ export function NotesView() {
     leaf.openFile(fileToOpen as TFile, { active: false });
   }, []);
 
-  const openCurrentKeyboardSelectedNote = useCallback((noteIndex: number) => {
-    const currentKeyboardSelectedNote = document.querySelector(
-      `[note-position="${currentNoteIndex}"]`
-    );
-
-    console.log("[AYY] before detection");
-    if (!currentKeyboardSelectedNote) return;
-    console.log("[AYY] after detection");
-
-    const currentKeyboardSelectedNoteFilePath =
-      currentKeyboardSelectedNote.getAttribute("data-path")!;
-    openFile(currentKeyboardSelectedNoteFilePath);
-  }, []);
-
   const navigateNotes: KeyboardEventHandler<HTMLDivElement> = (event) => {
     if (
       currentNoteIndex === null ||
