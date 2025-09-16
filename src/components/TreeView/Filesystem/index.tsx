@@ -3,6 +3,7 @@ import { TFolder } from "obsidian";
 import { useState, useCallback, useRef } from "react";
 import { toBoolean, sortFoldersAlphabetically } from "utils";
 import { useStore } from "store";
+import { useApp } from "hooks";
 
 interface FilesystemProps {
   folder: TFolder;
@@ -12,14 +13,16 @@ interface FilesystemProps {
 export function Filesystem(props: Readonly<FilesystemProps>) {
   const { folder } = props;
   const setIsFolderFocused = useStore((state) => state.setIsFolderFocused);
-  const { setCurrentActiveFolderPath } = useStore((state) => ({
+  const { setCurrentActiveFolderPath, setFlatTree } = useStore((state) => ({
     setCurrentActiveFolderPath: state.setCurrentActiveFolderPath,
+    setFlatTree: state.setFlatTree,
   }));
 
   const [isOpen, setIsOpen] = useState<boolean>(
     toBoolean(localStorage.getItem(folder.path))
   );
   const contentRef = useRef<HTMLDivElement>(null);
+  const app = useApp();
 
   const onClickChevron = useCallback(
     (options: { manualOpenState: boolean }) => {
@@ -33,6 +36,7 @@ export function Filesystem(props: Readonly<FilesystemProps>) {
 
       localStorage.setItem(folder.path, `${newIsOpen}`);
       setIsOpen(newIsOpen);
+      setFlatTree(app.vault.getRoot());
     },
     [isOpen]
   );

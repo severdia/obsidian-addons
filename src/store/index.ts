@@ -1,4 +1,5 @@
-import { App, TFile } from "obsidian";
+import { App, TFile, TFolder } from "obsidian";
+import { sortFoldersAlphabetically, toBoolean } from "utils";
 import { create } from "zustand";
 
 type NotesViewType = "LIST" | "GRID";
@@ -26,6 +27,9 @@ interface State {
   setForceNotesViewUpdate: () => void;
   setCurrentNoteIndex: (position: number) => void;
   setCurrentSelectedNoteIndex: (position: number) => void;
+  flatTree: string[];
+  folderIndicesTracker: Map<string, string>;
+  setFlatTree: (root: TFolder) => void;
 }
 
 export const useStore = create<State>()((set) => ({
@@ -84,6 +88,32 @@ export const useStore = create<State>()((set) => ({
   setCurrentSelectedNoteIndex: (position) => {
     set((state) => {
       return { ...state, currentSelectedNoteIndex: position };
+    });
+  },
+
+  flatTree: [],
+  folderIndicesTracker: new Map(),
+  setFlatTree: (root: TFolder) => {
+    set((state) => {
+      const flatTree: string[] = [];
+      const folderIndicesTracker = new Map<string, string>();
+      const traverse = (node: TFolder) => {
+        const isExpanded = toBoolean(localStorage.getItem(node.path));
+        const index = flatTree.length;
+        folderIndicesTracker.set(node.path, `${index}`);
+        folderIndicesTracker.set(`${index}`, node.path);
+        flatTree.push(node.path);
+        state.flatTree;
+        if (isExpanded && node.children && node.children.length > 0) {
+          sortFoldersAlphabetically(
+            node.children.filter((node) => node instanceof TFolder)
+          ).forEach(traverse);
+        }
+      };
+
+      traverse(root);
+
+      return { ...state, flatTree, folderIndicesTracker };
     });
   },
 }));

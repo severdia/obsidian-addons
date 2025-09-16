@@ -27,6 +27,23 @@ interface FolderProps {
   isAttachment?: boolean;
 }
 
+function scrollIntoViewIfNeeded(el: HTMLElement) {
+  if (!el) return;
+  const bottomOffset = 50;
+  const rect = el.getBoundingClientRect();
+  const treeViewContainer = document.getElementById("onb-filesystem");
+  if (!treeViewContainer) return;
+  const viewHeight =
+    treeViewContainer.innerHeight || treeViewContainer.clientHeight;
+
+  if (rect.top < 0) {
+    el.scrollIntoView({ block: "start", behavior: "smooth" });
+  } else if (rect.bottom > viewHeight) {
+    const scrollY = rect.bottom - viewHeight + bottomOffset;
+    treeViewContainer.scrollBy({ top: scrollY, behavior: "smooth" });
+  }
+}
+
 export const Folder = memo((props: Readonly<FolderProps>) => {
   const [isDropping, setIsDropping] = useState(false);
   const dropTimeOut = useRef<NodeJS.Timeout | null>(null);
@@ -56,6 +73,7 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
 
   const isFolderFocused = useStore((state) => state.isFolderFocused);
   const isActive = currentActiveFolderPath === props.folder.path;
+  const folderRef = useRef<HTMLDivElement>(null);
 
   const activeBackgroundColor = isActive
     ? isFolderFocused
@@ -76,7 +94,6 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
     : "onb-text-[color:--onb-folder-icon-color]";
 
   const handleOnDropFiles = (droppabaleFiles: File[]) => {
-    console.log(droppabaleFiles);
     droppabaleFiles.map((file) => {
       file.arrayBuffer().then((content) => {
         app.vault.adapter.writeBinary(
@@ -288,7 +305,7 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
     if (props.isOpen) return;
     dropTimeOut.current = setTimeout(() => {
       console.log("drag enter " + props.folder?.name);
-      props.onClickChevron({manualOpenState: true});
+      props.onClickChevron({ manualOpenState: true });
     }, 3000);
   };
 
@@ -313,10 +330,32 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
     }
   };
 
-  // cleanup timeout on unmount
   useEffect(() => {
     return () => clearDropTimeout();
   }, []);
+
+  useEffect(() => {
+    if (isActive && folderRef.current) {
+      const container = document.getElementById("onb-filesystem");
+      const folder = folderRef.current;
+
+      if (container && folder) {
+        const containerRect = container.getBoundingClientRect();
+        const folderRect = folder.getBoundingClientRect();
+
+        const isVisible =
+          folderRect.top >= containerRect.top &&
+          folderRect.bottom <= containerRect.bottom;
+
+        if (!isVisible) {
+          folder.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+          });
+        }
+      }
+    }
+  }, [isActive]);
 
   if (isAttachmentFolder && settings.hideAttachmentFolder) {
     return null;
@@ -348,6 +387,7 @@ export const Folder = memo((props: Readonly<FolderProps>) => {
           draggable={!settings.isDraggingFilesAndFoldersdisabled}
           onDragStart={onDragStart}
           onContextMenu={handleFolderContextMenu}
+          ref={folderRef}
         >
           <div
             {...getRootProps()}
