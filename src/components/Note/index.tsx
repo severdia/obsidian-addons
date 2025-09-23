@@ -41,6 +41,7 @@ export const Note = memo(({ file, isFirst, notePosition }: NoteProps) => {
     isFolderFocused,
     setCurrentNoteIndex,
     setCurrentSelectedNoteIndex,
+    setForceNotesViewUpdate,
   } = useStore((state) => ({
     forceNotesViewUpdate: state.forceNotesViewUpdate,
     notesViewType: state.notesViewType,
@@ -48,6 +49,7 @@ export const Note = memo(({ file, isFirst, notePosition }: NoteProps) => {
     isFolderFocused: state.isFolderFocused,
     setCurrentNoteIndex: state.setCurrentNoteIndex,
     setCurrentSelectedNoteIndex: state.setCurrentSelectedNoteIndex,
+    setForceNotesViewUpdate: state.setForceNotesViewUpdate,
   }));
 
   const { settings } = usePlugin();
@@ -266,6 +268,24 @@ export const Note = memo(({ file, isFirst, notePosition }: NoteProps) => {
 
     if (!fileToTrigger) return;
 
+    const isNotePinned = localStorage.getItem(`pinned.${file.path}`);
+
+    if (isNotePinned) {
+      fileMenu.addItem((menuItem) => {
+        menuItem.setTitle("Unpin");
+        menuItem.setIcon("pin");
+        menuItem.setSection("action");
+        menuItem.onClick(handleUnPin);
+      });
+    } else {
+      fileMenu.addItem((menuItem) => {
+        menuItem.setTitle("Pin");
+        menuItem.setIcon("pin");
+        menuItem.setSection("action");
+        menuItem.onClick(handlePin);
+      });
+    }
+
     fileMenu.addItem((menuItem) => {
       menuItem.setTitle("Duplicate note");
       menuItem.setIcon("copy");
@@ -290,17 +310,28 @@ export const Note = memo(({ file, isFirst, notePosition }: NoteProps) => {
     fileMenu.showAtPosition({ x: e.pageX, y: e.pageY });
   };
 
+  const handlePin = useCallback(() => {
+    localStorage.setItem(`pinned.${file.path}`, `${true}`);
+    setForceNotesViewUpdate();
+  }, []);
+
+  const handleUnPin = useCallback(() => {
+    localStorage.removeItem(`pinned.${file.path}`);
+    setForceNotesViewUpdate();
+  }, []);
+
   return (
     <>
       {notesViewType === "LIST" && (
         <div
-          className={`onb-size-full onb-flex onb-flex-col onb-justify-between ${backgroundListColorClass}`}
+          className={`onb-size-full onb-flex onb-flex-col onb-h-[64px] onb-justify-between ${backgroundListColorClass}`}
         >
           <div className="onb-w-full onb-px-[--onb-divider-padding-x] onb-h-fit">
             <div
               className={`onb-w-full ${seperatorClasses} onb-h-[--onb-divider-height]`}
             />
           </div>
+
           <NoteListView
             className={`onb-p-3 ${backgroundListColorClass} onb-overflow-hidden onb-h-full onb-select-none onb-flex onb-flex-row onb-items-center`}
             note-position={notePosition}

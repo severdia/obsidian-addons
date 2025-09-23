@@ -113,6 +113,7 @@
   --onb-tab-background-hover-color: #f2f2f2;
   --onb-tab-text-color: #757575;
   --onb-selected-tab-text-color: #494a49;
+  --pinned-notes-title-color: #808080;
 }
 
 .theme-dark {
@@ -178,9 +179,13 @@
   --onb-tab-background-hover-color: #3a3a3a;
   --onb-tab-text-color: #a0a0a0;
   --onb-selected-tab-text-color: #f0f0f0;
+  --pinned-notes-title-color: #808080;
 }
 
 :root {
   interpolate-size: allow-keywords;
-  --onb-note-keyboard-highlight: #f5f5f5;
+}
+
+.Pane {
+  overflow-x: hidden;
 }

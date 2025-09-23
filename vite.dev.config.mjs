@@ -53,7 +53,9 @@ export default defineConfig({
         target: "es2018",
         sourcemap: false,
         minify: true,
-        watch: {}
+        watch: {
+            buildDelay: 5000
+        }
     },
     plugins: [
         {

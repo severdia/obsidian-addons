@@ -1,11 +1,12 @@
 import { useStore } from "store";
 import {
+  HTMLProps,
   KeyboardEventHandler,
+  ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import { NotesViewToolbar } from "./NotesViewToolbar";
 import { GalleryView } from "./GalleryView";
@@ -14,6 +15,26 @@ import { useApp, useObsidianConfig, usePlugin } from "hooks";
 import { TFile, TFolder } from "obsidian";
 import { ALLOWDED_FILE_EXTENSION_SET } from "utils";
 import { List } from "react-virtualized";
+import { Pin } from "components/Icons/Pin";
+import { Note } from "components/Note";
+
+interface NotesContainerProps extends HTMLProps<HTMLDivElement> {
+  children?: ReactNode[];
+}
+const NotesContainer = ({
+  children,
+  className,
+  ...props
+}: NotesContainerProps) => {
+  return (
+    <div
+      {...props}
+      className={`onb-w-full onb-h-fit onb-py-2 onb-pl-2 onb-gap-1.5 onb-max-w-full custom-scrollbar ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
 
 export function NotesView() {
   const {
@@ -68,39 +89,62 @@ export function NotesView() {
   };
 
   const notes = useMemo(() => {
-    if (isAttachmentFolder) {
-      let attachments: TFile[] = [];
-      function getAttachmentFileRecursively(folder: TFolder) {
-        const children = folder.children;
+    function getAllNotes() {
+      if (isAttachmentFolder) {
+        let attachments: TFile[] = [];
+        function getAttachmentFileRecursively(folder: TFolder) {
+          const children = folder.children;
 
-        if (children.length === 0) return;
-        attachments = attachments.concat(
-          children.filter((file) => file instanceof TFile)
+          if (children.length === 0) return;
+          attachments = attachments.concat(
+            children.filter((file) => file instanceof TFile)
+          );
+          children
+            .filter((folder) => folder instanceof TFolder)
+            .forEach((folder) => getAttachmentFileRecursively(folder));
+        }
+
+        getAttachmentFileRecursively(
+          currentActiveFolderAbstractFile as TFolder
         );
-        children
-          .filter((folder) => folder instanceof TFolder)
-          .forEach((folder) => getAttachmentFileRecursively(folder));
+
+        return attachments.map((file) => {
+          (file as any).isAttachment = true;
+          return file;
+        });
       }
 
-      getAttachmentFileRecursively(currentActiveFolderAbstractFile as TFolder);
-
-      return attachments
-        .filter((file) => {
-          (file as any).isAttachment = true;
-          return true;
-        })
-        .sort(sortNotes);
-    }
-
-    return files
-      .filter((file) => {
+      return files.filter((file) => {
         if (isAttachmentFolder) {
           (file as any).isAttachment = true;
           return true;
         }
         return ALLOWDED_FILE_EXTENSION_SET.has(file.extension);
-      })
-      .sort(sortNotes);
+      });
+    }
+
+    const allNotes = getAllNotes();
+
+    const pinned: TFile[] = [];
+    const unpinned: TFile[] = [];
+
+    allNotes.forEach((note) => {
+      if (localStorage.getItem(`pinned.${note.path}`)) {
+        //@ts-ignore
+        note.index = -1; // this index is used for keyboard navigation
+        pinned.push(note);
+      } else {
+        //@ts-ignore
+        note.index = unpinned.length;
+        unpinned.push(note);
+      }
+    });
+
+    return {
+      pinned: pinned.sort(sortNotes),
+      unpinned: unpinned.sort(sortNotes),
+      length: pinned.length + unpinned.length,
+    };
   }, [files, forceNotesViewUpdate]);
 
   const listRef = useRef<List>(null);
@@ -153,7 +197,7 @@ export function NotesView() {
 
   return (
     <div
-      className="onb-flex onb-flex-col onb-bg-[color:--onb-note-view-background-color] onb-h-full onb-w-full  onb-flex-grow"
+      className="onb-flex onb-flex-col onb-bg-[color:--onb-note-view-background-color] onb-h-full onb-w-full"
       tabIndex={0}
       onKeyDown={navigateNotes}
       onBlur={() => {
@@ -163,13 +207,50 @@ export function NotesView() {
     >
       <NotesViewToolbar />
 
-      <div className="onb-w-full onb-h-full onb-py-2 onb-pl-2 onb-gap-2 custom-scrollbar">
+      {notes.pinned.length !== 0 && (
+        <>
+          {" "}
+          <div className="onb-flex !onb-text-[color:--pinned-notes-title-color] onb-flex-row onb-items-center onb-gap-3 onb-border-b onb-border-0 onb-border-solid onb-border-gray-300 onb-p-2">
+            <Pin className="onb-size-4" />
+            <div className="onb-font-bold">Pinned</div>
+          </div>
+          <NotesContainer>
+            {notes.length > 0 && notesViewType === "LIST" && (
+              <div id="testId" className="onb-flex onb-flex-col onb-pr-2">
+                {notes.pinned.map((note) => (
+                  <div className="w-full onb-h-fit first:[--onb-divider-height:0px]">
+                    <Note file={note} key={note.path} notePosition={-1} />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {notes.length > 0 && notesViewType === "GRID" && (
+              <GalleryView notes={notes.pinned} />
+            )}
+
+            {notes.length === 0 && (
+              <div className="onb-w-full onb-h-full onb-flex onb-items-center  onb-justify-center onb-text-[color:var(--onb-no-note-text-color)]">
+                No Notes
+              </div>
+            )}
+          </NotesContainer>
+        </>
+      )}
+
+      {notes.pinned.length !== 0 && (
+        <div className="onb-text-[color:--pinned-notes-title-color] onb-px-2 onb-py-3 onb-font-bold">
+          Notes
+        </div>
+      )}
+
+      <NotesContainer className="onb-h-full">
         {notes.length > 0 && notesViewType === "LIST" && (
-          <ListView notes={notes} listRef={listRef} />
+          <ListView notes={notes.unpinned} listRef={listRef} />
         )}
 
         {notes.length > 0 && notesViewType === "GRID" && (
-          <GalleryView notes={notes} />
+          <GalleryView notes={notes.unpinned} />
         )}
 
         {notes.length === 0 && (
@@ -177,7 +258,7 @@ export function NotesView() {
             No Notes
           </div>
         )}
-      </div>
+      </NotesContainer>
     </div>
   );
 }

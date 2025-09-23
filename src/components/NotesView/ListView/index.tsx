@@ -18,7 +18,8 @@ export const ListView = ({
     >
       <Note
         file={notes[index]}
-        notePosition={index}
+        //@ts-ignore
+        notePosition={notes[index].index}
         isFirst={index === 0}
       />
     </div>
