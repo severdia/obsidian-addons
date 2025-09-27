@@ -209,9 +209,7 @@ export function NotesView() {
 
       {notes.pinned.length !== 0 && (
         <>
-          {" "}
           <div className="onb-flex !onb-text-[color:--pinned-notes-title-color] onb-flex-row onb-items-center onb-gap-3 onb-border-b onb-border-0 onb-border-solid onb-border-gray-300 onb-p-2">
-            <Pin className="onb-size-4" />
             <div className="onb-font-bold">Pinned</div>
           </div>
           <NotesContainer>
