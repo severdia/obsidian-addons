@@ -142,18 +142,41 @@ export const Note = memo(({ file, isFirst, notePosition }: NoteProps) => {
     }
   }, []);
 
-  const openFile = useCallback((inSeparatedWindow: boolean = false) => {
-    if (!app) return;
-    const fileToOpen = app.vault.getAbstractFileByPath(file.path);
-    if (!fileToOpen) return;
-    const leaf = app.workspace.getLeaf(inSeparatedWindow ? "window" : false);
+  const openFile = useCallback(
+    (inSeparatedWindow: boolean = false) => {
+      if (!app) return;
+      const fileToOpen = app.vault.getAbstractFileByPath(file.path);
+      if (!(fileToOpen instanceof TFile)) return;
 
-    app.workspace.setActiveLeaf(leaf, {
-      focus: false,
-    });
+      // Check if file is already open
+      const existingLeaves = app.workspace.getLeavesOfType("markdown");
+      const existingLeaf = existingLeaves.find((leaf) => {
+        const viewState = leaf.getViewState();
+        return viewState.state?.file === fileToOpen.path;
+      });
 
-    leaf.openFile(fileToOpen as TFile, { active: false });
-  }, []);
+      if (existingLeaf && !inSeparatedWindow) {
+        // File is already open - focus it
+        app.workspace.setActiveLeaf(existingLeaf, { focus: true });
+      } else {
+        // File not open, or we want a new window - open in new leaf
+        const leaf = app.workspace.getLeaf(
+          inSeparatedWindow ? "window" : false
+        );
+
+        // Set active leaf first if not opening in window
+        if (!inSeparatedWindow) {
+          app.workspace.setActiveLeaf(leaf, { focus: false });
+        }
+
+        leaf.openFile(fileToOpen, {
+          active: !inSeparatedWindow, // Active for tab, not for window
+          eState: { focus: !inSeparatedWindow }, // Focus for tab, not for window
+        });
+      }
+    },
+    [app, file.path]
+  );
 
   const onClickOpenFile = useCallback(() => {
     if (clickTimeoutRef.current) return; // Prevent double invocation

@@ -163,18 +163,38 @@ export function NotesView() {
     openFile(currentKeyboardSelectedNoteFilePath);
   }, [currentNoteIndex]);
 
-  const openFile = useCallback((path: string) => {
-    if (!app) return;
-    const fileToOpen = app.vault.getAbstractFileByPath(path);
-    if (!fileToOpen) return;
-    const leaf = app.workspace.getLeaf();
+  const openFile = useCallback(
+    (path: string) => {
+      if (!app) return;
 
-    app.workspace.setActiveLeaf(leaf, {
-      focus: false,
-    });
+      const fileToOpen = app.vault.getAbstractFileByPath(path);
+      if (!(fileToOpen instanceof TFile)) return;
 
-    leaf.openFile(fileToOpen as TFile, { active: false });
-  }, []);
+      // Check if file is already open
+      const existingLeaves = app.workspace.getLeavesOfType("markdown");
+      const existingLeaf = existingLeaves.find((leaf) => {
+        const viewState = leaf.getViewState();
+        return viewState.state?.file === fileToOpen.path;
+      });
+
+      if (existingLeaf) {
+        // File already open - focus it
+        app.workspace.setActiveLeaf(existingLeaf, { focus: true });
+      } else {
+        // File not open - open in new leaf
+        const leaf = app.workspace.getLeaf();
+
+        app.workspace.setActiveLeaf(leaf, {
+          focus: false,
+        });
+
+        leaf.openFile(fileToOpen, {
+          active: true, // Changed to true to focus the new tab
+        });
+      }
+    },
+    [app]
+  );
 
   const navigateNotes: KeyboardEventHandler<HTMLDivElement> = (event) => {
     if (
