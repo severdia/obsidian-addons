@@ -216,29 +216,31 @@ export default class NotesBrowser extends Plugin {
   onActiveLeafChange = (leaf: WorkspaceLeaf | null) => {
     if (!leaf) return;
 
-    if (leaf && leaf.getContainer() instanceof WorkspaceWindow) {
+    if (leaf.getContainer() instanceof WorkspaceWindow) {
       return;
     }
 
-    const viewType = leaf.getViewState().type;
-    if (
-      viewType !== "markdown" &&
-      viewType !== "canvas" &&
-      viewType !== "bases" &&
-      viewType !== "image"
-    )
-      return;
-
     const currentOpenFile = this.app.workspace.getActiveFile();
-    if (!currentOpenFile?.parent) return;
+    const viewType = leaf.getViewState().type;
 
-    if (viewType === "image") {
-      useStore.getState().setCurrentActiveFilePath(currentOpenFile.path);
+    const fileBasedViewTypes = new Set([
+      "markdown",
+      "canvas",
+      "bases",
+      "image",
+      "pdf",
+      "audio",
+      "video",
+    ]);
+
+    if (!fileBasedViewTypes.has(viewType) || !currentOpenFile) {
       return;
     }
 
     useStore.getState().setCurrentActiveFilePath(currentOpenFile.path);
-    useStore.getState().setCurrentActiveFolderPath(currentOpenFile.parent.path);
+    useStore
+      .getState()
+      .setCurrentActiveFolderPath(currentOpenFile.parent?.path || "/");
   };
 
   async loadSettings() {

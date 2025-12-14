@@ -14,24 +14,22 @@ export const NoteListView = memo(
   }: NoteCommonProps) => {
     const isFolderFocused = useStore((state) => state.isFolderFocused);
     const [imageError, setImageError] = useState(false);
-    const titleClasses =
-      isSelected && !isFolderFocused
-        ? "onb-text-[color:--onb-note-title-selected]"
-        : "onb-text-[color:--onb-note-title]";
-    const descriptionClasses =
-      isSelected && !isFolderFocused
-        ? "onb-text-[color:--onb-note-title-selected]"
-        : "onb-text-[color:--onb-note-text-description-color]";
-    const timeClasses =
-      isSelected && !isFolderFocused
-        ? "onb-text-[color:--onb-note-title-selected]"
-        : "onb-text-[color:--onb-note-text-date-color]";
+    const isActive = isSelected && !isFolderFocused;
+    const titleClasses = isActive
+      ? "onb-text-[color:--onb-note-title-selected]"
+      : "onb-text-[color:--onb-note-title]";
+    const descriptionClasses = isActive
+      ? "onb-text-[color:--onb-note-title-selected]"
+      : "onb-text-[color:--onb-note-text-description-color]";
+    const timeClasses = isActive
+      ? "onb-text-[color:--onb-note-title-selected]"
+      : "onb-text-[color:--onb-note-text-date-color]";
 
     const badgeBorderClasses =
       "onb-border-[1px] onb-border-solid " +
-      (isSelected && !isFolderFocused
-        ? "onb-text-[color:--onb-note-title]"
-        : "onb-border-transparent");
+      (isActive
+        ? "onb-text-[color:--onb-note-title] onb-text-white"
+        : "onb-border-transparent onb-bg-[var(--apple-notes-blue)] onb-text-[color:--onb-badge-text-color] ");
 
     return (
       <div {...divProps}>
@@ -60,7 +58,7 @@ export const NoteListView = memo(
           </div>
           {extension && extension !== "md" && (
             <div
-              className={`onb-bg-[var(--apple-notes-blue)] onb-box-border onb-inline-block ${badgeBorderClasses} onb-align-middle onb-text-[color:--onb-badge-text-color] onb-rounded-full onb-text-[length:--onb-note-text-badge-size] onb-w-fit onb-px-1`}
+              className={`onb-box-border onb-inline-block ${badgeBorderClasses} onb-align-middle  onb-rounded-full onb-text-[length:--onb-note-text-badge-size] onb-w-fit onb-px-1`}
             >
               {extension.toUpperCase()}
             </div>

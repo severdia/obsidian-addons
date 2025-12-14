@@ -19,6 +19,9 @@
 .onb-ml-6 {
     margin-left: 1.5rem;
 }
+.onb-mt-1 {
+    margin-top: 0.25rem;
+}
 .onb-box-border {
     box-sizing: border-box;
 }
@@ -39,6 +42,9 @@
 }
 .onb-flex {
     display: flex;
+}
+.onb-inline-flex {
+    display: inline-flex;
 }
 .onb-size-6 {
     width: 1.5rem;
@@ -248,6 +254,9 @@
 .onb-border-transparent {
     border-color: transparent;
 }
+.onb-border-\[color\:--onb-note-badge-border-selected\] {
+    border-color: var(--onb-note-badge-border-selected);
+}
 .onb-border-b-\[var\(--divider-color\)\] {
     border-bottom-color: var(--divider-color);
 }
@@ -286,6 +295,21 @@
 }
 .onb-bg-\[var\(--onb-tab-background-color\)\] {
     background-color: var(--onb-tab-background-color);
+}
+.onb-bg-\[color\:--onb-note-text-date-color\] {
+    background-color: var(--onb-note-text-date-color);
+}
+.onb-bg-\[color\:--onb-note-title\] {
+    background-color: var(--onb-note-title);
+}
+.onb-bg-\[color\:--onb-note-badge-bg-selected\] {
+    background-color: var(--onb-note-badge-bg-selected);
+}
+.onb-bg-\[color\:--onb-note-badge-bg\] {
+    background-color: var(--onb-note-badge-bg);
+}
+.onb-bg-transparent {
+    background-color: transparent;
 }
 .onb-object-cover {
     -o-object-fit: cover;
@@ -341,6 +365,14 @@
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
+.onb-py-0\.5 {
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+}
+.onb-px-1\.5 {
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+}
 .onb-pb-2 {
     padding-bottom: 0.5rem;
 }
@@ -385,6 +417,9 @@
 }
 .onb-font-semibold {
     font-weight: 600;
+}
+.onb-font-medium {
+    font-weight: 500;
 }
 .\!onb-text-\[color\:--onb-folder-text-active\] {
     color: var(--onb-folder-text-active) !important;
@@ -451,6 +486,16 @@
 }
 .onb-text-\[var\(--onb-toolbar-icon-color\)\] {
     color: var(--onb-toolbar-icon-color);
+}
+.onb-text-white {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+.onb-text-\[color\:--onb-note-badge-text-selected\] {
+    color: var(--onb-note-badge-text-selected);
+}
+.onb-text-\[color\:--onb-note-badge-text\] {
+    color: var(--onb-note-badge-text);
 }
 .onb-transition-\[height\] {
     transition-property: height;
