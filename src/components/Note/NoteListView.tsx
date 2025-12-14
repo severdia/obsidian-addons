@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { NoteCommonProps } from "./types";
 import { useStore } from "store";
 
@@ -13,8 +13,11 @@ export const NoteListView = memo(
     ...divProps
   }: NoteCommonProps) => {
     const isFolderFocused = useStore((state) => state.isFolderFocused);
+    const [imageError, setImageError] = useState(false);
     const titleClasses =
-      isSelected && !isFolderFocused ? "onb-text-[color:--onb-note-title-selected]" : "onb-text-[color:--onb-note-title]";
+      isSelected && !isFolderFocused
+        ? "onb-text-[color:--onb-note-title-selected]"
+        : "onb-text-[color:--onb-note-title]";
     const descriptionClasses =
       isSelected && !isFolderFocused
         ? "onb-text-[color:--onb-note-title-selected]"
@@ -62,10 +65,11 @@ export const NoteListView = memo(
               {extension.toUpperCase()}
             </div>
           )}
-        </div> 
-        {imageLink && (
+        </div>
+        {imageLink && !imageError && (
           <img
             src={imageLink}
+            onError={() => setImageError(true)}
             className="onb-border onb-object-fill onb-object-top onb-min-w-9 onb-min-h-9 onb-size-9 onb-border-gray-300 onb-rounded"
           />
         )}
