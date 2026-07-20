@@ -1,0 +1,19 @@
+{
+  "name": "device-theme",
+  "version": "1.0.0",
+  "description": "Device-specific theme loader for Obsidian",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+  },
+  "author": "Ron Severdia",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20",
+    "esbuild": "0.20.2",
+    "obsidian": "latest",
+    "typescript": "^5"
+  }
+}

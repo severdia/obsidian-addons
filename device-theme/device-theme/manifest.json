@@ -1,0 +1,9 @@
+{
+  "id": "device-theme",
+  "name": "Device-Specific Theme",
+  "version": "1.0.0",
+  "minAppVersion": "1.4.0",
+  "description": "Load a different theme (or none) on desktop vs. mobile from one synced vault. Injects theme CSS at runtime per platform, so your appearance settings never sync-conflict across iCloud.",
+  "author": "Ron Severdia",
+  "isDesktopOnly": false
+}
